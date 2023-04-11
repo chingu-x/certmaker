@@ -2,11 +2,11 @@ import { PDFDocument, StandardFonts, rgb } from "pdf-lib"
 import { writeFileSync, readFileSync } from "fs"
 
 async function createPDF() {
-  const document = await PDFDocument.load(readFileSync("./assets/Chingu Voyage Completion Certificate - Template.pdf"))
+  const document = await PDFDocument.load(readFileSync("./assets/Chingu Voyage Completion Certificate (V5.0) - Template.pdf"))
 
   const helveticaFont = await document.embedFont(StandardFonts.Helvetica)
   const helveticaBoldObliqueFont = await document.embedFont(StandardFonts.HelveticaBoldOblique)
-  const firstPage = document.getPage(0)
+  const certPage = document.getPage(0)
 
   const dateFormat = {
     month: "long",
@@ -14,20 +14,24 @@ async function createPDF() {
     year: "numeric",
   }
   const issueDate = 'on '.concat(Intl.DateTimeFormat('en',dateFormat).format(new Date()))
-  firstPage.moveTo(700, 450)
-  firstPage.drawText(issueDate, {
+  certPage.moveTo(700, 450)
+  certPage.drawText(issueDate, {
     font: helveticaFont,
     size: 28,
   })
 
-  firstPage.moveTo(700, 600);
-  firstPage.drawText("Jane Doe", {
+  const pageWidth = certPage.getWidth()
+  const voyagerNameWidth = helveticaBoldObliqueFont.widthOfTextAtSize('Johnson Obliquefontana', 36)
+  const voyagerNameLeftPos = pageWidth/2 - voyagerNameWidth/2
+
+  certPage.moveTo(voyagerNameLeftPos,600)
+  certPage.drawText('Johnson Obliquefontana', {
     font: helveticaBoldObliqueFont,
     size: 36,
   })
 
-  firstPage.moveTo(675, 370);
-  firstPage.drawText("Voyage #44", {
+  certPage.moveTo(675, 370)
+  certPage.drawText("Voyage #44", {
     font: helveticaBoldObliqueFont,
     size: 36,
   })
