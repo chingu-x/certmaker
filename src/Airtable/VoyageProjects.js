@@ -31,8 +31,8 @@ const getSuccessfulVoyagers = async (voyageName) => {
           email: `${ record.get('Email') }`,
           voyage: `${ record.get('What is your Voyage?') }`,
           tier: `${ tierName }`,
-          team_no: `${ record.get('Team No.') }`,
-          discord_name: `${ record.get('Discord ID') }`,
+          team_no: `${ record.get('What is your Team number? ') }`,
+          discord_name: `${ record.get('Discord Name (from Applications)') }`,
           certificate_name: `${ record.get('Certificate name')}`,
           role: `${ record.get('Role (from Voyage Signups Link)') }`,
         })      
