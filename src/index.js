@@ -1,5 +1,9 @@
 import { PDFDocument, StandardFonts, rgb } from "pdf-lib"
 import { writeFileSync, readFileSync } from "fs"
+import * as dotenv from 'dotenv'
+import { getSuccessfulVoyagers } from './Airtable/VoyageProjects.js'
+
+dotenv.config()
 
 async function createPDF() {
   const document = await PDFDocument.load(readFileSync("./assets/Chingu Voyage Completion Certificate (V5.0) - Template.pdf"))
@@ -39,4 +43,6 @@ async function createPDF() {
   writeFileSync("Completed Cert.pdf", await document.save())
 }
 
+const successfulVoyagers = await getSuccessfulVoyagers(process.env.VOYAGE)
+console.log('successfulVoyager: ', successfulVoyagers)
 createPDF().catch((err) => console.log(err))

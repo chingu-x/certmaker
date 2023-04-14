@@ -11,6 +11,8 @@
   "author": "Jim D. Medlock",
   "license": "ISC",
   "dependencies": {
+    "airtable": "^0.11.6",
+    "dotenv": "^16.0.3",
     "pdf-lib": "^1.17.1"
   }
 }
