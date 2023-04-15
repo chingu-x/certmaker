@@ -43,8 +43,8 @@ async function createPDF(voyage) {
   })
 
   // Write the completed certificate to the local file system
-  writeFileSync('Chingu Completion Cert - '
-    .concat(voyage.voyage,' - ',voyage.tier,' ',voyage.team_no,' - ',
+  writeFileSync(process.env.CERTIFICATE_PATH
+    .concat('Chingu Completion Cert - ',voyage.voyage,' - ',voyage.tier,' ',voyage.team_no,' - ',
       voyage.certificate_name,'.pdf'), await document.save())
 }
 
