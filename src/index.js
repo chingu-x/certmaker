@@ -12,28 +12,27 @@ async function createPDF(voyage) {
   const helveticaBoldObliqueFont = await document.embedFont(StandardFonts.HelveticaBoldOblique)
   const certPage = document.getPage(0)
 
-  // Add the certificate date to the page
-  const dateFormat = {
-    month: "long",
-    day: "2-digit",
-    year: "numeric",
-  }
-  const issueDate = 'on '.concat(Intl.DateTimeFormat('en',dateFormat).format(new Date()))
-  certPage.moveTo(700, 450)
-  certPage.drawText(issueDate, {
-    font: helveticaFont,
-    size: 28,
-  })
-
   // Center the participants name & add it to the page
   const pageWidth = certPage.getWidth()
-  const voyagerNameWidth = helveticaBoldObliqueFont.widthOfTextAtSize(voyage.certificate_name, 36)
+  const voyagerNameWidth = helveticaBoldObliqueFont.widthOfTextAtSize(voyage.certificate_name, 48)
   const voyagerNameLeftPos = pageWidth/2 - voyagerNameWidth/2
 
   certPage.moveTo(voyagerNameLeftPos,600)
   certPage.drawText(voyage.certificate_name, {
     font: helveticaBoldObliqueFont,
-    size: 36,
+    size: 48,
+  })
+
+  // Add the Voyagee role & certificate date to the page
+  const roleAndDate = 'as a '.concat(voyage.role, ' on ', process.env.COMPLETION_DATE)
+  const roleAndDateWidth = helveticaBoldObliqueFont.widthOfTextAtSize(roleAndDate, 30)
+  const roleAndDateLeftPos = pageWidth/2 - roleAndDateWidth/2
+  
+  certPage.moveTo(roleAndDateLeftPos, 445)
+  certPage.drawText(roleAndDate, {
+    font: helveticaFont,
+    size: 30,
+    color: rgb(.267,.267,.275),
   })
 
   // Add the Voyage name to the page

@@ -12,14 +12,11 @@ const getSuccessfulVoyagers = async (voyageName) => {
         "{Completed Voyage?} = \"Yes\" " + 
       ")"
     
-    console.log('filter: ', filter)
-
     base('Voyage Projects').select({ 
       filterByFormula: filter,
       view: 'Voyage Project Submissions' 
     })
     .eachPage(function page(records, fetchNextPage) {
-      console.log('got here')
       // Return an object array containing Voyagers who successfully 
       // completed the Voyage
       let voyagerNo = 0
