@@ -43,8 +43,9 @@ async function createPDF(voyage) {
   })
 
   // Write the completed certificate to the local file system
+  const teamNo = voyage.team_no > 9 ? voyage.team_no : '0'.concat(voyage.team_no)
   writeFileSync(process.env.CERTIFICATE_PATH
-    .concat('Chingu Completion Cert - ',voyage.voyage,' - ',voyage.tier,' ',voyage.team_no,' - ',
+    .concat('Chingu Completion Cert - ',voyage.voyage,' - ',voyage.tier,'-',teamNo,' - ',
       voyage.certificate_name,'.pdf'), await document.save())
 }
 
