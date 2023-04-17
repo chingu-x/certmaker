@@ -1,5 +1,5 @@
 {
-  "name": "chingucertmaker",
+  "name": "certmaker",
   "version": "1.0.0",
   "description": "Create Chingu Voyage Certificates",
   "main": "src/index.js",
