@@ -5,12 +5,32 @@ const getSuccessfulVoyagers = async (voyageName) => {
   return new Promise(async (resolve, reject) => {
     let voyagers = []
 
-    const base = new Airtable({ apiKey: process.env.AIRTABLE_API_KEY }).base(process.env.AIRTABLE_BASE)
-
-    const filter = "AND(" + 
+    let filter
+    if (process.env.TEAMS === 'ALL') {
+      filter = "AND(" + 
         "{What is your Voyage?} = \"" + voyageName + "\", " + 
         "{Completed Voyage?} = \"Yes\" " + 
       ")"
+    } else {
+      const teamNumbers = process.env.TEAMS.split(',')
+      const teamConditions = teamNumbers.map(teamNumber => {
+        return '{'.concat('What is your Team number?}',' = ',teamNumber)
+      })
+      let orClause = ''
+      for (let i = 0; i < teamConditions.length; i++) {
+        orClause = orClause.concat(teamConditions[i],)
+        if (i < (teamConditions.length - 1)) {
+          orClause = orClause.concat(', ')
+        }
+      }
+      filter = "AND(" + 
+        "{What is your Voyage?} = \"" + voyageName + "\", " + 
+        "{Completed Voyage?} = \"Yes\" , " + 
+        "OR(" + orClause + ") " + 
+      ")"
+    }
+
+    const base = new Airtable({ apiKey: process.env.AIRTABLE_API_KEY }).base(process.env.AIRTABLE_BASE)
     
     base('Voyage Projects').select({ 
       filterByFormula: filter,
