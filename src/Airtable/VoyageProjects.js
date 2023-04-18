@@ -7,15 +7,19 @@ const getSuccessfulVoyagers = async (voyageName) => {
 
     let filter
     if (process.env.TEAMS === 'ALL') {
+      // Create a filter to extract all team members who successfully completed
       filter = "AND(" + 
         "{What is your Voyage?} = \"" + voyageName + "\", " + 
         "{Completed Voyage?} = \"Yes\" " + 
       ")"
     } else {
+      // Create a filter to extract team members from specific teams who 
+      // successfully completed
       const teamNumbers = process.env.TEAMS.split(',')
       const teamConditions = teamNumbers.map(teamNumber => {
         return '{'.concat('What is your Team number?}',' = ',teamNumber)
       })
+
       let orClause = ''
       for (let i = 0; i < teamConditions.length; i++) {
         orClause = orClause.concat(teamConditions[i],)
@@ -23,6 +27,7 @@ const getSuccessfulVoyagers = async (voyageName) => {
           orClause = orClause.concat(', ')
         }
       }
+
       filter = "AND(" + 
         "{What is your Voyage?} = \"" + voyageName + "\", " + 
         "{Completed Voyage?} = \"Yes\" , " + 
@@ -48,7 +53,7 @@ const getSuccessfulVoyagers = async (voyageName) => {
           email: `${ record.get('Email') }`,
           voyage: `${ record.get('What is your Voyage?') }`,
           tier: `${ tierName }`,
-          team_no: `${ record.get('What is your Team number? ') }`,
+          team_no: `${ record.get('What is your Team number?') }`,
           discord_name: `${ record.get('Discord Name (from Applications)') }`,
           certificate_name: `${ record.get('Certificate name')}`,
           role: `${ record.get('Role (from Voyage Signups Link)') }`,
