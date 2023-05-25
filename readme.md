@@ -68,8 +68,8 @@ in the `.env` file.
 Update the `.env` file as follows:
 ```
 # Airtable
-AIRTABLE_API_KEY=key6aOhWOfKbs30za
-AIRTABLE_BASE=appgoC1weqCVH4XA
+AIRTABLE_API_KEY=key4nOhM9fKbs94Ba
+AIRTABLE_BASE=appgoC1weqBUY5EX
 # Voyage Filters
 VOYAGE=V43
 TEAMS=ALL
