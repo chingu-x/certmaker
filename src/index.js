@@ -85,16 +85,23 @@ async function createPDF(voyager) {
   writeFileSync(process.env.CERTIFICATE_PATH
     .concat('Chingu Completion Cert - ',voyager.voyage,' - ',voyager.tier,'-',teamNo,' - ',
       voyager.certificate_name,'.pdf'), await document.save())
+
+  // Return the certificate pdf so it can be emailed
+  return document
 }
 
 // Retrieve the Chingus who successfully completed the Voyage and generate
 // a Completion Certificate for each one.
-const successfulVoyagers = await getSuccessfulVoyagers(process.env.VOYAGE)
-successfulVoyagers.forEach((voyager) => {
-  console.log('Processing voyager: ', voyager)
-  createPDF(voyager)
-    .catch((err) => {
-      console.log('Error on Voyager: ', voyager)
-      console.log('Error: ', err)
-  })
-})
+(async () => {
+  const successfulVoyagers = await getSuccessfulVoyagers(process.env.VOYAGE)
+  let certDocument
+  for (let voyager of successfulVoyagers) {
+    // Generate the certificate PDF for this Voyager
+    certDocument = await createPDF(voyager)
+      .catch((err) => {
+        console.log('Error on Voyager: ', voyager)
+        console.log('Error: ', err)
+    })
+    // TODO: Convert the PDF to base64 and email it via MailJet
+  }
+})()
