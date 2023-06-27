@@ -95,6 +95,7 @@ async function createPDF(voyager) {
 (async () => {
   const successfulVoyagers = await getSuccessfulVoyagers(process.env.VOYAGE)
   let certDocument
+  let base64Cert
   for (let voyager of successfulVoyagers) {
     // Generate the certificate PDF for this Voyager
     certDocument = await createPDF(voyager)
@@ -102,6 +103,8 @@ async function createPDF(voyager) {
         console.log('Error on Voyager: ', voyager)
         console.log('Error: ', err)
     })
-    // TODO: Convert the PDF to base64 and email it via MailJet
+    // Convert the PDF to base64 and email it via MailJet
+    base64Cert = await certDocument.saveAsBase64()
+    
   }
 })()
