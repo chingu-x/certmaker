@@ -1,9 +1,27 @@
-import { PDFDocument, StandardFonts, rgb } from "pdf-lib"
+import { PDFDocument, PDFName, PDFString, StandardFonts, rgb } from "pdf-lib"
 import { writeFileSync, readFileSync } from "fs"
 import * as dotenv from 'dotenv'
 import { getSuccessfulVoyagers } from './Airtable/VoyageProjects.js'
 
 dotenv.config()
+
+// Copied from https://github.com/Hopding/pdf-lib/issues/555#issuecomment-670241308
+const createPageLinkAnnotation = (page, uri) => {
+  page.doc.context.register(
+    page.doc.context.obj({
+      Type: 'Annot',
+      Subtype: 'Link',
+      Rect: [0, 30, 40, 230],
+      Border: [0, 0, 2],
+      C: [0, 0, 1],
+      A: {
+        Type: 'Action',
+        S: 'URI',
+        URI: PDFString.of(uri),
+      },
+    }),
+  )
+}
 
 async function createPDF(voyager) {
   const document = await PDFDocument
@@ -42,6 +60,26 @@ async function createPDF(voyager) {
     size: 36,
   })
 
+    // Add the repo & deployment URL's to the page
+    certPage.moveTo(240, 250)
+    certPage.drawText('Repo: '.concat(voyager.repo_url), {
+      font: helveticaFont,
+      size: 24,
+      color: rgb(0, 0.53, 0.71)
+    })
+    const repoLink = createPageLinkAnnotation(certPage, voyager.repo_url)
+    certPage.node.set(PDFName.of('Annots'), document.context.obj([repoLink]))
+
+    certPage.moveTo(240, 225)
+    certPage.drawText('Deployed at: '.concat(voyager.deployed_url), {
+      font: helveticaFont,
+      size: 24,
+      color: rgb(0, 0.53, 0.71)
+    })
+    const deployLink = createPageLinkAnnotation(certPage, voyager.deployed_url)
+    certPage.node.set(PDFName.of('Annots'), document.context.obj([deployLink]))
+
+
   // Write the completed certificate to the local file system
   const teamNo = voyager.team_no > 9 ? voyager.team_no : '0'.concat(voyager.team_no)
   writeFileSync(process.env.CERTIFICATE_PATH
@@ -53,6 +91,7 @@ async function createPDF(voyager) {
 // a Completion Certificate for each one.
 const successfulVoyagers = await getSuccessfulVoyagers(process.env.VOYAGE)
 successfulVoyagers.forEach((voyager) => {
+  console.log('Processing voyager: ', voyager)
   createPDF(voyager)
     .catch((err) => {
       console.log('Error on Voyager: ', voyager)
