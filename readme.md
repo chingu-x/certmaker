@@ -54,10 +54,13 @@ in the `.env` file.
 |----------------|------------------------------------------|
 | AIRTABLE_API_KEY | Airtable API key needed to access Airtable |
 | AIRTABLE_BASE  | Airtable base id containing the table(s) to be accessed |
-| VOYAGE         | The Voyage name (e.g. 'V99') certificates are to be produced for |
-| TEAMS          | Teams certs are to be produced for. Use 'ALL' for all teams or a comma separated list of team numbers. |
+| MAILJET_API_KEY | MailJet API key |
+| MAILJET_SECRET_KEY | MailJet API Secret key |
+| MODE | Mode of operation. `EMAIL` will generate & email certificates. `NOEMAIL` or omitted will generate certificates, but not email them. |
 | COMPLETION_DATE | Date to be added to certificates (e.g. 'April 23, 2023') |
 | CERTIFICATE_PATH | Path for where certificates will be stored on the local computer (e.g. /Users/jim/Downloads/Chingu_V42_Certificates/) |
+| VOYAGE         | The Voyage name (e.g. 'V99') certificates are to be produced for |
+| TEAMS          | Teams certs are to be produced for. Use 'ALL' for all teams or a comma separated list of team numbers. |
 
 `env.sample` in the root of the project contains a sample of how to set up a `.env` file.
 
@@ -70,12 +73,17 @@ Update the `.env` file as follows:
 # Airtable
 AIRTABLE_API_KEY=key4nOhM9fKbs94Ba
 AIRTABLE_BASE=appgoC1weqBUY5EX
-# Voyage Filters
-VOYAGE=V43
-TEAMS=ALL
+# Mailjet API
+MAILJET_API_KEY=01e7ab43fsg6fsgh45fs3478ffh5809
+MAILJET_SECRET_KEY=84fs55gsfg66hh533gfr309kkk53f2f
 # Certificate info
+MODE=NOEMAIL
 COMPLETION_DATE=April 23, 2023
 CERTIFICATE_PATH=/Users/jim/Downloads/Chingu_V42_Certificates/
+# Voyage Filters
+VOYAGE=V42
+TEAMS=ALL
+
 ```
 
 Next, run certmaker:
@@ -91,14 +99,18 @@ environment variable.
 Update the `.env` file as follows:
 ```
 # Airtable
-AIRTABLE_API_KEY=key6aOhWOfKbs30za
-AIRTABLE_BASE=appgoC1weqCVH4XA
-# Voyage Filters
-VOYAGE=V43
-TEAMS=01,34
+AIRTABLE_API_KEY=key4nOhM9fKbs94Ba
+AIRTABLE_BASE=appgoC1weqBUY5EX
+# Mailjet API
+MAILJET_API_KEY=01e7ab43fsg6fsgh45fs3478ffh5809
+MAILJET_SECRET_KEY=84fs55gsfg66hh533gfr309kkk53f2f
 # Certificate info
+MODE=NOEMAIL
 COMPLETION_DATE=April 23, 2023
 CERTIFICATE_PATH=/Users/jim/Downloads/Chingu_V42_Certificates/
+# Voyage Filters
+VOYAGE=V42
+TEAMS=01,34
 ```
 
 Next, run certmaker:

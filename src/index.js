@@ -24,7 +24,7 @@ async function createPDF(voyager) {
   })
 
   // Add the Voyager role & certificate date to the page
-  const roleAndDate = 'as a '.concat(voyager.role, ' on ', process.env.COMPLETION_DATE)
+  const roleAndDate = voyager.role.concat(' on ', process.env.COMPLETION_DATE)
   const roleAndDateWidth = helveticaBoldObliqueFont.widthOfTextAtSize(roleAndDate, 30)
   const roleAndDateLeftPos = pageWidth/2 - roleAndDateWidth/2
   
