@@ -31,10 +31,11 @@ const sendMail = (toEmail, toName, attachmentFileName, attachmentBase64) => {
   })
   mailjetReq
   .then(async (result) => {
-    console.log('mailjetReq successfully completed')
+    console.log(`...successfully emailed certificate to ${ toEmail }`)
   })
   .catch(async (err) => {
-    console.log('Error sending comment: ', err)
+    console.log(`...error emailing certificate to ${ toEmail }`)
+    console.log('...err: ', err)
   })
 }
 
