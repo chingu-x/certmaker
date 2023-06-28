@@ -105,7 +105,9 @@ async function createPDF(voyager) {
         console.log('Error: ', err)
     })
     // Convert the PDF to base64 and email it via MailJet
-    base64Cert = await certDocument.saveAsBase64()
-    sendMail(voyager.email, voyager.certificate_name, 'cert.pdf', base64Cert)
+    if (process.env.MODE.toUpperCase() === 'EMAIL') {
+      base64Cert = await certDocument.saveAsBase64()
+      sendMail(voyager.email, voyager.certificate_name, 'cert.pdf', base64Cert)
+    }
   }
 })()
