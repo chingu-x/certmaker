@@ -57,6 +57,8 @@ const getSuccessfulVoyagers = async (voyageName) => {
           discord_name: `${ record.get('Discord Name (from Applications)') }`,
           certificate_name: `${ record.get('Certificate name')}`,
           role: `${ record.get('Role (from Voyage Signups Link)') }`,
+          repo_url: `${ record.get('URL of your Github repo:') }`,
+          deployed_url: `${ record.get('URL of your deployed project:') }`,
         })      
       }
 
