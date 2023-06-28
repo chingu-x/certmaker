@@ -2,6 +2,7 @@ import { PDFDocument, PDFName, PDFString, StandardFonts, rgb } from "pdf-lib"
 import { writeFileSync, readFileSync } from "fs"
 import * as dotenv from 'dotenv'
 import { getSuccessfulVoyagers } from './Airtable/VoyageProjects.js'
+import { sendMail } from './Mailjet/sendMail.js'
 
 dotenv.config()
 
@@ -105,6 +106,6 @@ async function createPDF(voyager) {
     })
     // Convert the PDF to base64 and email it via MailJet
     base64Cert = await certDocument.saveAsBase64()
-    
+    sendMail(voyager.email, voyager.certificate_name, 'cert.pdf', base64Cert)
   }
 })()

@@ -1,9 +1,9 @@
-import mailjet from 'node-mailjet'
+import nodeMailjet from 'node-mailjet'
 
 const sendMail = (toEmail, toName, attachmentFileName, attachmentBase64) => {
-  mailjet.connect(process.env.MAILJET_API_KEY, process.env.MAILJET_SECRET_KEY)
+  nodeMailjet.connect(process.env.MAILJET_API_KEY, process.env.MAILJET_SECRET_KEY)
 
-  const mailjetReq = mailjet
+  const mailjetReq = nodeMailjet
   .post("send", {'version': 'v3.1'})
   .request({
     "Messages":[
@@ -14,7 +14,7 @@ const sendMail = (toEmail, toName, attachmentFileName, attachmentBase64) => {
             "Name": `${ toName }`
           }
         ],
-        "TemplateID": messageTemplate.templateID,
+        "TemplateID": process.env.MAILJET_TEMPLATE_ID,
         "TemplateLanguage": true,
         "Variables": {
           "toName": `${ toName }`,
@@ -46,3 +46,5 @@ const sendMail = (toEmail, toName, attachmentFileName, attachmentBase64) => {
     })
   })
 }
+
+export { sendMail }
