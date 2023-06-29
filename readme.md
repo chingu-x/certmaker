@@ -56,6 +56,7 @@ in the `.env` file.
 | AIRTABLE_BASE  | Airtable base id containing the table(s) to be accessed |
 | MAILJET_API_KEY | MailJet API key |
 | MAILJET_SECRET_KEY | MailJet API Secret key |
+| MAILJET_TEMPLATE_ID | Template identifier of the message template in Mailjet |
 | MODE | Mode of operation. `EMAIL` will generate & email certificates. `NOEMAIL` or omitted will generate certificates, but not email them. |
 | COMPLETION_DATE | Date to be added to certificates (e.g. 'April 23, 2023') |
 | CERTIFICATE_PATH | Path for where certificates will be stored on the local computer (e.g. /Users/jim/Downloads/Chingu_V42_Certificates/) |
@@ -76,6 +77,7 @@ AIRTABLE_BASE=appgoC1weqBUY5EX
 # Mailjet API
 MAILJET_API_KEY=01e7ab43fsg6fsgh45fs3478ffh5809
 MAILJET_SECRET_KEY=84fs55gsfg66hh533gfr309kkk53f2f
+MAILJET_TEMPLATE_ID=123456789
 # Certificate info
 MODE=NOEMAIL
 COMPLETION_DATE=April 23, 2023
@@ -94,7 +96,7 @@ npm run start
 All certificates will be added to the directory specified by the `CERTIFICATE_PATH`
 environment variable.
 
-#### Example #2 - Create certificates for specific Voyage teams
+#### Example #2 - Create & email certificates for specific Voyage teams
 
 Update the `.env` file as follows:
 ```
@@ -104,8 +106,9 @@ AIRTABLE_BASE=appgoC1weqBUY5EX
 # Mailjet API
 MAILJET_API_KEY=01e7ab43fsg6fsgh45fs3478ffh5809
 MAILJET_SECRET_KEY=84fs55gsfg66hh533gfr309kkk53f2f
+MAILJET_TEMPLATE_ID=123456789
 # Certificate info
-MODE=NOEMAIL
+MODE=EMAIL
 COMPLETION_DATE=April 23, 2023
 CERTIFICATE_PATH=/Users/jim/Downloads/Chingu_V42_Certificates/
 # Voyage Filters
@@ -118,7 +121,7 @@ Next, run certmaker:
 npm run start
 ```
 
-Certificates for Voyagers in V43 teams 01 and 34 will be added to the directory specified by the `CERTIFICATE_PATH` environment variable.
+Certificates for Voyagers in V43 teams 01 and 34 will be added to the directory specified by the `CERTIFICATE_PATH` environment variable and also emailed to them.
 
 ## Release History
 
