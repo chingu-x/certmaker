@@ -60,6 +60,7 @@ in the `.env` file.
 | MODE | Mode of operation. `EMAIL` will generate & email certificates. `NOEMAIL` or omitted will generate certificates, but not email them. |
 | COMPLETION_DATE | Date to be added to certificates (e.g. 'April 23, 2023') |
 | CERTIFICATE_PATH | Path for where certificates will be stored on the local computer (e.g. /Users/jim/Downloads/Chingu_V42_Certificates/) |
+| TEMPLATE_PATH | Path to the PDF file that's the template to be customized for each Voyager |
 | VOYAGE         | The Voyage name (e.g. 'V99') certificates are to be produced for |
 | TEAMS          | Teams certs are to be produced for. Use 'ALL' for all teams or a comma separated list of team numbers. |
 
@@ -82,6 +83,7 @@ MAILJET_TEMPLATE_ID=123456789
 MODE=NOEMAIL
 COMPLETION_DATE=April 23, 2023
 CERTIFICATE_PATH=/Users/jim/Downloads/Chingu_V42_Certificates/
+TEMPLATE_PATH=./assets/Chingu Voyage Completion Certificate (V5.0) - Template.pdf
 # Voyage Filters
 VOYAGE=V42
 TEAMS=ALL
@@ -111,6 +113,7 @@ MAILJET_TEMPLATE_ID=123456789
 MODE=EMAIL
 COMPLETION_DATE=April 23, 2023
 CERTIFICATE_PATH=/Users/jim/Downloads/Chingu_V42_Certificates/
+TEMPLATE_PATH=./assets/Chingu Voyage Completion Certificate (V5.0) - Template.pdf
 # Voyage Filters
 VOYAGE=V42
 TEAMS=01,34
