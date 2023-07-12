@@ -1,6 +1,6 @@
 {
   "name": "certmaker",
-  "version": "1.0.0",
+  "version": "1.2.0",
   "description": "Create Chingu Voyage Certificates",
   "main": "src/index.js",
   "type": "module",
