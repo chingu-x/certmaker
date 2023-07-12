@@ -26,7 +26,7 @@ const createPageLinkAnnotation = (page, uri) => {
 
 async function createPDF(voyager) {
   const document = await PDFDocument
-    .load(readFileSync("./assets/Chingu Voyage Completion Certificate (V5.0) - Template.pdf"))
+    .load(readFileSync(process.env.TEMPLATE_PATH))
   const helveticaFont = await document.embedFont(StandardFonts.Helvetica)
   const helveticaBoldObliqueFont = await document.embedFont(StandardFonts.HelveticaBoldOblique)
   const certPage = document.getPage(0)
