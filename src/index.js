@@ -26,7 +26,7 @@ const createPageLinkAnnotation = (page, uri) => {
 
 async function createPDF(voyager) {
   const document = await PDFDocument
-    .load(readFileSync("./assets/Chingu Voyage Completion Certificate (V5.0) - Template.pdf"))
+    .load(readFileSync(process.env.TEMPLATE_PATH))
   const helveticaFont = await document.embedFont(StandardFonts.Helvetica)
   const helveticaBoldObliqueFont = await document.embedFont(StandardFonts.HelveticaBoldOblique)
   const certPage = document.getPage(0)
@@ -61,25 +61,24 @@ async function createPDF(voyager) {
     size: 36,
   })
 
-    // Add the repo & deployment URL's to the page
-    certPage.moveTo(240, 250)
-    certPage.drawText('Repo: '.concat(voyager.repo_url), {
-      font: helveticaFont,
-      size: 24,
-      color: rgb(0, 0.53, 0.71)
-    })
-    const repoLink = createPageLinkAnnotation(certPage, voyager.repo_url)
-    certPage.node.set(PDFName.of('Annots'), document.context.obj([repoLink]))
+  // Add the repo & deployment URL's to the page
+  certPage.moveTo(240, 250)
+  certPage.drawText('Repo: '.concat(voyager.repo_url), {
+    font: helveticaFont,
+    size: 24,
+    color: rgb(0, 0.53, 0.71)
+  })
+  const repoLink = createPageLinkAnnotation(certPage, voyager.repo_url)
+  certPage.node.set(PDFName.of('Annots'), document.context.obj([repoLink]))
 
-    certPage.moveTo(240, 225)
-    certPage.drawText('Deployed at: '.concat(voyager.deployed_url), {
-      font: helveticaFont,
-      size: 24,
-      color: rgb(0, 0.53, 0.71)
-    })
-    const deployLink = createPageLinkAnnotation(certPage, voyager.deployed_url)
-    certPage.node.set(PDFName.of('Annots'), document.context.obj([deployLink]))
-
+  certPage.moveTo(240, 225)
+  certPage.drawText('Deployed at: '.concat(voyager.deployed_url), {
+    font: helveticaFont,
+    size: 24,
+    color: rgb(0, 0.53, 0.71)
+  })
+  const deployLink = createPageLinkAnnotation(certPage, voyager.deployed_url)
+  certPage.node.set(PDFName.of('Annots'), document.context.obj([deployLink]))
 
   // Write the completed certificate to the local file system
   const teamNo = voyager.team_no > 9 ? voyager.team_no : '0'.concat(voyager.team_no)
