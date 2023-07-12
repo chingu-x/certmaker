@@ -80,7 +80,6 @@ async function createPDF(voyager) {
     const deployLink = createPageLinkAnnotation(certPage, voyager.deployed_url)
     certPage.node.set(PDFName.of('Annots'), document.context.obj([deployLink]))
 
-
   // Write the completed certificate to the local file system
   const teamNo = voyager.team_no > 9 ? voyager.team_no : '0'.concat(voyager.team_no)
   writeFileSync(process.env.CERTIFICATE_PATH
