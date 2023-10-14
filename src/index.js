@@ -26,7 +26,7 @@ const createPageLinkAnnotation = (page, uri) => {
 
 async function createPDF(voyager) {
   const document = await PDFDocument
-    .load(readFileSync(process.env.TEMPLATE_PATH))
+    .load(readFileSync(process.env.TEMPLATE_PATH)) // TODO: Move outside the Voyager processing loop
   const helveticaFont = await document.embedFont(StandardFonts.Helvetica)
   const helveticaBoldObliqueFont = await document.embedFont(StandardFonts.HelveticaBoldOblique)
   const certPage = document.getPage(0)
@@ -104,7 +104,6 @@ async function createPDF(voyager) {
         console.log('Error on Voyager: ', voyager)
         console.log('Error: ', err)
     })
-    console.log('...successfully generated certificate PDF')
 
     // Convert the PDF to base64 and email it via MailJet
     if (process.env.MODE.toUpperCase() === 'EMAIL') {
