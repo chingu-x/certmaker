@@ -44,9 +44,9 @@ async function createPDF(recipient) {
 // Retrieve the Chingus who successfully completed the Voyage and generate
 // a Completion Certificate for each one.
 const createHolidayCert = async () => {
+  console.log('createHolidayCert - ')
   let certDocument
   let base64Cert
-  //const participants = JSON.parse(recipients)
   for (let recipient of recipients.recipients) {
     console.log(`Processing certificate for ${ recipient.certificate_name }...`)
     // Generate the certificate PDF for this Voyager
@@ -59,7 +59,7 @@ const createHolidayCert = async () => {
     // Convert the PDF to base64 and email it via MailJet
     if (process.env.MODE.toUpperCase() === 'EMAIL') {
       base64Cert = await certDocument.saveAsBase64()
-      //sendMail(recipient.email, recipient.certificate_name, 'cert.pdf', base64Cert)
+      sendMail(recipient.email, recipient.certificate_name, 'cert.pdf', base64Cert, process.env.HACKATHON_CERT_TEMPLATE_ID)
     }
   }
 }

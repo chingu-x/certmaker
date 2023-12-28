@@ -105,7 +105,7 @@ const createVoyageCert = async () => {
     // Convert the PDF to base64 and email it via MailJet
     if (process.env.MODE.toUpperCase() === 'EMAIL') {
       base64Cert = await certDocument.saveAsBase64()
-      sendMail(voyager.email, voyager.certificate_name, 'cert.pdf', base64Cert)
+      sendMail(voyager.email, voyager.certificate_name, 'cert.pdf', base64Cert, process.env.VOYAGE_CERT_TEMPLATE_ID)
     }
   }
 }
