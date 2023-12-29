@@ -24,8 +24,13 @@ that are provided to Chingus who successfully complete a Voyage.
 
 ## Process Overview
 
-Chingucertmaker uses the completion summary for Voyage teams that is maintained
-in Airtable.
+Chingucertmaker create both Voyage Completion Certificates and Certificates
+of Achievement for Chingu. 
+
+For Voyage Completion Certificates it uses the 
+completion summary data for Voyage teams that is maintained in Airtable. For
+Certificates of Achievement it uses data maintained in a configuration file 
+in a configuration file in this repo.
 
 ## Installation
 
