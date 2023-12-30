@@ -17,15 +17,12 @@
 
 # certmaker
 
-Certmaker automates the process of creating Voyage completion certificates
-that are provided to Chingus who successfully complete a Voyage.
+Chingucertmaker create both Voyage Completion Certificates and for the various
+events Chingu sponsors, Certificates of Achievement. 
 
 [Process Overview](#process-overview) - [Installation](#installation) - [Usage](#usage) - [Release History](#release-history) - [License](#license)
 
 ## Process Overview
-
-Chingucertmaker create both Voyage Completion Certificates and Certificates
-of Achievement for Chingu. 
 
 For Voyage Completion Certificates it uses the 
 completion summary data for Voyage teams that is maintained in Airtable. For
@@ -50,24 +47,33 @@ certmaker is a command line application (CLI). The basic command to run it is:
 ```
 npm run start
     - or -
-node src/index.js
+node src/index.js Vnn
 ```
+If you choose to run it as an `npm` script be sure to first update the 'start`
+script to be `node src/index.js Vnn`, replacing `Vnn` to match the Voyage number
+for the Voyage you wish to generate certificates for.
+
 Before running it you'll first need to update option values  
 in the `.env` file. 
 
 | `.env` Parm    | Description                              |
 |----------------|------------------------------------------|
+|                | **_Shared configuration parameters:_**   |
 | AIRTABLE_API_KEY | Airtable API key needed to access Airtable |
 | AIRTABLE_BASE  | Airtable base id containing the table(s) to be accessed |
 | MAILJET_API_KEY | MailJet API key |
 | MAILJET_SECRET_KEY | MailJet API Secret key |
 | MAILJET_TEMPLATE_ID | Template identifier of the message template in Mailjet |
+| TYPE | The type of certificate to create - `VOYAGE` or `HACKATHON` |
 | MODE | Mode of operation. `EMAIL` will generate & email certificates. `NOEMAIL` or omitted will generate certificates, but not email them. |
 | COMPLETION_DATE | Date to be added to certificates (e.g. 'April 23, 2023') |
 | CERTIFICATE_PATH | Path for where certificates will be stored on the local computer (e.g. /Users/jim/Downloads/Chingu_V42_Certificates/) |
 | TEMPLATE_PATH | Path to the PDF file that's the template to be customized for each Voyager |
+|            | **__For Voyage Certificates:__** |
 | VOYAGE         | The Voyage name (e.g. 'V99') certificates are to be produced for |
 | TEAMS          | Teams certs are to be produced for. Use 'ALL' for all teams or a comma separated list of team numbers. |
+|            | **__For Hackathon Certificates:__** |
+| RECIPIENTS | Path to the JSON file containing the email & name of each recipient |
 
 `env.sample` in the root of the project contains a sample of how to set up a `.env` file.
 
@@ -84,6 +90,7 @@ AIRTABLE_BASE=appgoC1weqBUY5EX
 MAILJET_API_KEY=01e7ab43fsg6fsgh45fs3478ffh5809
 MAILJET_SECRET_KEY=84fs55gsfg66hh533gfr309kkk53f2f
 MAILJET_TEMPLATE_ID=123456789
+TYPE=VOYAGE
 # Certificate info
 MODE=NOEMAIL
 COMPLETION_DATE=April 23, 2023
@@ -114,6 +121,7 @@ AIRTABLE_BASE=appgoC1weqBUY5EX
 MAILJET_API_KEY=01e7ab43fsg6fsgh45fs3478ffh5809
 MAILJET_SECRET_KEY=84fs55gsfg66hh533gfr309kkk53f2f
 MAILJET_TEMPLATE_ID=123456789
+TYPE=VOYAGE
 # Certificate info
 MODE=EMAIL
 COMPLETION_DATE=April 23, 2023
@@ -130,6 +138,35 @@ npm run start
 ```
 
 Certificates for Voyagers in V43 teams 01 and 34 will be added to the directory specified by the `CERTIFICATE_PATH` environment variable and also emailed to them.
+
+#### Example #3 - Create certificates for Chingus annual Holiday Hackathon
+
+Update the `.env` file as follows:
+```
+# Airtable
+AIRTABLE_API_KEY=key4nOhM9fKbs94Ba
+AIRTABLE_BASE=appgoC1weqBUY5EX
+# Mailjet API
+MAILJET_API_KEY=01e7ab43fsg6fsgh45fs3478ffh5809
+MAILJET_SECRET_KEY=84fs55gsfg66hh533gfr309kkk53f2f
+MAILJET_TEMPLATE_ID=123456789
+TYPE=HACKATHON
+# Certificate info
+MODE=NOEMAIL
+COMPLETION_DATE=December 27, 2023
+RECIPIENTS=./config/2023_holiday_hackathon_recipients.json
+CERTIFICATE_PATH=/Users/jim/Downloads/Holiday_Hackathon_Certificates/
+TEMPLATE_PATH=./assets/Chingu Holiday Hackathon 2023 Certificate (v1.0) - Template .pdf
+
+```
+
+Next, run certmaker:
+```
+npm run start
+```
+
+All certificates will be added to the directory specified by the `CERTIFICATE_PATH`
+environment variable.
 
 ## Release History
 
