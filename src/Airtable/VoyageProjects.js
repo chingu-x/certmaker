@@ -10,7 +10,10 @@ const getSuccessfulVoyagers = async (voyageName) => {
       // Create a filter to extract all team members who successfully completed
       filter = "AND(" + 
         "{What is your Voyage?} = \"" + voyageName + "\", " + 
-        "{Completed Voyage?} = \"Yes\" " + 
+        "{Completed Voyage?} = \"Yes\", " + 
+        "OR({Role (from Voyage Signups Link)} = \"Voyage Guide\", " + 
+           "{Product} != \"\" " +
+        ")" +
       ")"
     } else {
       // Create a filter to extract team members from specific teams who 
@@ -31,9 +34,14 @@ const getSuccessfulVoyagers = async (voyageName) => {
       filter = "AND(" + 
         "{What is your Voyage?} = \"" + voyageName + "\", " + 
         "{Completed Voyage?} = \"Yes\" , " + 
+        "OR({Role (from Voyage Signups Link)} = \"Voyage Guide\", " + 
+           "{Product} != \"\" " +
+        "), " +
         "OR(" + orClause + ") " + 
       ")"
     }
+
+    console.log('getSuccessfulVoyager - filter: ', filter)
 
     const base = new Airtable({ apiKey: process.env.AIRTABLE_API_KEY }).base(process.env.AIRTABLE_BASE)
     
