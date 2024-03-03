@@ -1,7 +1,7 @@
 import { PDFDocument, PDFName, PDFString, StandardFonts, rgb } from "pdf-lib"
 import { writeFileSync, readFileSync } from "fs"
 import { sendMail } from '../Mailjet/sendMail.js'
-import recipients from '../../config/2023_holiday_hackathon_recipients.json' assert { type: "json" }
+import recipients from '../../config/v47_agile_recipients.json' assert { type: "json" }
 
 async function createPDF(recipient) {
   const document = await PDFDocument
@@ -12,30 +12,30 @@ async function createPDF(recipient) {
 
   // Center the participants name & add it to the page
   const pageWidth = certPage.getWidth()
-  const recipientNameWidth = helveticaBoldObliqueFont.widthOfTextAtSize(recipient.certificate_name, 48)
+  const recipientNameWidth = helveticaBoldObliqueFont.widthOfTextAtSize(recipient.certificate_name, 28)
   const recipientNameLeftPos = pageWidth/2 - recipientNameWidth/2
 
-  certPage.moveTo(recipientNameLeftPos,675)
+  certPage.moveTo(recipientNameLeftPos, 270)
   certPage.drawText(recipient.certificate_name, {
     font: helveticaBoldObliqueFont,
-    size: 48,
+    size: 28,
   })
 
   // Add the Voyager role & certificate date to the page
   const date = process.env.COMPLETION_DATE
   const dateWidth = helveticaBoldObliqueFont.widthOfTextAtSize(date, 30)
-  const dateLeftPos = 400 - dateWidth/2
+  const dateLeftPos = 650 - dateWidth/2
   
-  certPage.moveTo(dateLeftPos, 280)
+  certPage.moveTo(dateLeftPos, 120)
   certPage.drawText(date, {
     font: helveticaFont,
-    size: 30,
+    size: 20,
     color: rgb(.267,.267,.275),
   })
 
   // Write the completed certificate to the local file system
   writeFileSync(process.env.CERTIFICATE_PATH
-    .concat('Chingu Completion Cert - ', recipient.certificate_name,'.pdf'), await document.save())
+    .concat('Chingu Agile Leadership Cert - ', recipient.certificate_name,'.pdf'), await document.save())
 
   // Return the certificate pdf so it can be emailed
   return document

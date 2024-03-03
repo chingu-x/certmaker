@@ -1,4 +1,5 @@
 import 'dotenv/config'
+import { createAgileCert } from './CompCerts/AgileCert.js'
 import { createHolidayCert } from './CompCerts/HolidayCert.js'
 import { createVoyageCert } from './CompCerts/VoyageCert.js'
 
