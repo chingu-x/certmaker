@@ -4,6 +4,9 @@ import { createVoyageCert } from './CompCerts/VoyageCert.js'
 
 (async () => {
   switch (process.env.TYPE) {
+    case 'AGILE':
+      await createAgileCert() 
+      break
     case 'HOLIDAY':
       await createHolidayCert() 
       break
