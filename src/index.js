@@ -1,7 +1,8 @@
 import 'dotenv/config'
 import { createAgileCert } from './CompCerts/AgileCert.js'
+import { createAgileContentCert } from './CompCerts/AgileContentCert.js'
 import { createDistinctionCert } from './CompCerts/DistinctionCert.js'
-import { createHolidayCert } from './CompCerts/HolidayCert.js'
+import { createHackathonCert } from './CompCerts/HackathonCert.js'
 import { createVoyageCert } from './CompCerts/VoyageCert.js'
 
 (async () => {
@@ -9,11 +10,14 @@ import { createVoyageCert } from './CompCerts/VoyageCert.js'
     case 'AGILE':
       await createAgileCert() 
       break
+    case 'AGILECONTENT':
+      await createAgileContentCert() 
+      break
     case 'DISTINCTION':
       await createDistinctionCert() 
       break  
-    case 'HOLIDAY':
-      await createHolidayCert() 
+    case 'HACKATHON':
+      await createHackathonCert() 
       break
     case 'VOYAGE': 
       await createVoyageCert()

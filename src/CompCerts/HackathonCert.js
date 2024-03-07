@@ -41,10 +41,10 @@ async function createPDF(recipient) {
   return document
 }
 
-// Retrieve the Chingus who successfully completed the Voyage and generate
-// a Completion Certificate for each one.
-const createHolidayCert = async () => {
-  console.log('createHolidayCert - ')
+// Retrieve the Chingus who successfully completed a Chingu Hackathon and 
+// generate a Completion Certificate for each one.
+const createHackathonCert = async () => {
+  console.log('createHackathonCert - ')
   let certDocument
   let base64Cert
   for (let recipient of recipients.recipients) {
@@ -64,4 +64,4 @@ const createHolidayCert = async () => {
   }
 }
 
-export { createHolidayCert }
+export { createHackathonCert }
