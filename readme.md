@@ -64,15 +64,15 @@ in the `.env` file.
 | MAILJET_API_KEY | MailJet API key |
 | MAILJET_SECRET_KEY | MailJet API Secret key |
 | MAILJET_TEMPLATE_ID | Template identifier of the message template in Mailjet |
-| TYPE | The type of certificate to create - `VOYAGE` or `HACKATHON` |
+| TYPE | The type of certificate to create - `AGILE`, `AGILECONTENT`, `DISTINCTION`, `HACKATHON` or `VOYAGE`  |
 | MODE | Mode of operation. `EMAIL` will generate & email certificates. `NOEMAIL` or omitted will generate certificates, but not email them. |
 | COMPLETION_DATE | Date to be added to certificates (e.g. 'April 23, 2023') |
 | CERTIFICATE_PATH | Path for where certificates will be stored on the local computer (e.g. /Users/jim/Downloads/Chingu_V42_Certificates/) |
 | TEMPLATE_PATH | Path to the PDF file that's the template to be customized for each Voyager |
 |            | **__For Voyage Certificates:__** |
-| VOYAGE         | The Voyage name (e.g. 'V99') certificates are to be produced for |
+| VOYAGE         | The Voyage name (e.g. 'V99') certificates are to be produced for. |
 | TEAMS          | Teams certs are to be produced for. Use 'ALL' for all teams or a comma separated list of team numbers. |
-|            | **__For Hackathon Certificates:__** |
+|            | **__For all other Certificates:__** |
 | RECIPIENTS | Path to the JSON file containing the email & name of each recipient |
 
 `env.sample` in the root of the project contains a sample of how to set up a `.env` file.
