@@ -1,11 +1,23 @@
 import 'dotenv/config'
-import { createHolidayCert } from './CompCerts/HolidayCert.js'
+import { createAgileCert } from './CompCerts/AgileCert.js'
+import { createAgileContentCert } from './CompCerts/AgileContentCert.js'
+import { createDistinctionCert } from './CompCerts/DistinctionCert.js'
+import { createHackathonCert } from './CompCerts/HackathonCert.js'
 import { createVoyageCert } from './CompCerts/VoyageCert.js'
 
 (async () => {
   switch (process.env.TYPE) {
-    case 'HOLIDAY':
-      await createHolidayCert() 
+    case 'AGILE':
+      await createAgileCert() 
+      break
+    case 'AGILECONTENT':
+      await createAgileContentCert() 
+      break
+    case 'DISTINCTION':
+      await createDistinctionCert() 
+      break  
+    case 'HACKATHON':
+      await createHackathonCert() 
       break
     case 'VOYAGE': 
       await createVoyageCert()
