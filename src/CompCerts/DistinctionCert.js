@@ -59,7 +59,7 @@ const createDistinctionCert = async () => {
     // Convert the PDF to base64 and email it via MailJet
     if (process.env.MODE.toUpperCase() === 'EMAIL') {
       base64Cert = await certDocument.saveAsBase64()
-      sendMail(recipient.email, recipient.certificate_name, 'cert.pdf', base64Cert, process.env.AGILE_CERT_TEMPLATE_ID)
+      sendMail(recipient.email, recipient.certificate_name, 'cert.pdf', base64Cert, process.env.VOYAGE_CERT_TEMPLATE_ID)
     }
   }
 }
