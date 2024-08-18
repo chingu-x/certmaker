@@ -94,7 +94,7 @@ const createVoyageCert = async () => {
   let certDocument
   let base64Cert
   for (let voyager of successfulVoyagers) {
-    console.log(`Processing certificate for ${ voyager.certificate_name }...`)
+    console.log(`Processing certificate for ${ voyager.discord_name } / ${ voyager.certificate_name }...`)
     // Generate the certificate PDF for this Voyager
     certDocument = await createPDF(voyager)
       .catch((err) => {

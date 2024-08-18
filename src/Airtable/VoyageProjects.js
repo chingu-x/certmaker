@@ -4,15 +4,19 @@ import Airtable from 'airtable'
 const getSuccessfulVoyagers = async (voyageName) => {
   return new Promise(async (resolve, reject) => {
     let voyagers = []
+    let filter    
 
-    let filter
     if (process.env.TEAMS === 'ALL') {
       // Create a filter to extract all team members who successfully completed
+      // TODO: Add environment variable to specify exact roles to be included
       filter = "AND(" + 
         "{What is your Voyage?} = \"" + voyageName + "\", " + 
         "{Completed Voyage?} = \"Yes\", " + 
         "OR({Role (from Voyage Signups Link)} = \"Voyage Guide\", " + 
            "{Product} != \"\" " +
+        "), " +
+        "AND({Role (from Voyage Signups Link)} != \"Product Owner\", " + 
+           "{Role (from Voyage Signups Link)} != \"Scrum Master\" " +
         ")" +
       ")"
     } else {
