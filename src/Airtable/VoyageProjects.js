@@ -14,11 +14,20 @@ const getSuccessfulVoyagers = async (voyageName) => {
         "{Completed Voyage?} = \"Yes\", " + 
         "OR({Role (from Voyage Signups Link)} = \"Voyage Guide\", " + 
            "{Product} != \"\" " +
-        "), " +
-        "AND({Role (from Voyage Signups Link)} != \"Product Owner\", " + 
-           "{Role (from Voyage Signups Link)} != \"Scrum Master\" " +
+        ") " +
+      ")"
+      /*
+      filter = "AND(" + 
+        "{What is your Voyage?} = \"" + voyageName + "\", " + 
+        "{Completed Voyage?} = \"Yes\", " + 
+        "AND({Role (from Voyage Signups Link)} != \"Developer\", " + 
+          "{Role (from Voyage Signups Link)} != \"UI/UX\", " +
+          "{Role (from Voyage Signups Link)} != \"UI/UX Designer\", " +
+          "{Role (from Voyage Signups Link)} != \"Data Scientist\", " +
+          "{Role (from Voyage Signups Link)} != \"Voyage Guide\" " +
         ")" +
       ")"
+      */
     } else {
       // Create a filter to extract team members from specific teams who 
       // successfully completed
