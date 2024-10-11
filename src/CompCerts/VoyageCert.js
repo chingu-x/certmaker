@@ -25,8 +25,16 @@ const createPDF = async (voyager) => {
   const document = await PDFDocument
     .load(readFileSync(process.env.TEMPLATE_PATH)) // TODO: Move outside the Voyager processing loop
   const helveticaFont = await document.embedFont(StandardFonts.Helvetica)
+  const helveticaObliqueFont = await document.embedFont(StandardFonts.HelveticaOblique)
   const helveticaBoldObliqueFont = await document.embedFont(StandardFonts.HelveticaBoldOblique)
   const certPage = document.getPage(0)
+
+  // Add the Voyage name to the page
+  certPage.moveTo(405, 672)
+  certPage.drawText(voyager.voyage.slice(1), {
+    font: helveticaFont,
+    size: 24,
+  })
 
   // Center the participants name & add it to the page
   const pageWidth = certPage.getWidth()
@@ -39,7 +47,7 @@ const createPDF = async (voyager) => {
     size: 48,
   })
 
-  // Add the Voyager role & certificate date to the page
+  // Add the Voyager role to the page
   const role = voyager.role
   const roleWidth = helveticaBoldObliqueFont.widthOfTextAtSize(role, 18)
   const roleLeftPos = pageWidth/2 - roleWidth/2
@@ -50,12 +58,14 @@ const createPDF = async (voyager) => {
     size: 18
   })
 
-  // Add the Voyage name to the page
-  certPage.moveTo(405, 672)
-  const helveticaObliqueFont = await document.embedFont(StandardFonts.HelveticaOblique)
-  certPage.drawText(voyager.voyage.slice(1), {
-    font: helveticaObliqueFont,
-    size: 24,
+  // Add the certificate date to the page
+  const certDate = process.env.COMPLETION_DATE
+  const certDateWidth = helveticaBoldObliqueFont.widthOfTextAtSize(certDate, 30)
+  
+  certPage.moveTo(355, 185)
+  certPage.drawText(certDate, {
+    font: helveticaFont,
+    size: 16
   })
 
   // Add the repo & deployment URL's to the page
