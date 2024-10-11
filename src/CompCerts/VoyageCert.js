@@ -33,45 +33,45 @@ const createPDF = async (voyager) => {
   const voyagerNameWidth = helveticaBoldObliqueFont.widthOfTextAtSize(voyager.certificate_name, 48)
   const voyagerNameLeftPos = pageWidth/2 - voyagerNameWidth/2
 
-  certPage.moveTo(voyagerNameLeftPos,600)
+  certPage.moveTo(voyagerNameLeftPos,400)
   certPage.drawText(voyager.certificate_name, {
     font: helveticaBoldObliqueFont,
     size: 48,
   })
 
   // Add the Voyager role & certificate date to the page
-  const roleAndDate = voyager.role.concat(' on ', process.env.COMPLETION_DATE)
-  const roleAndDateWidth = helveticaBoldObliqueFont.widthOfTextAtSize(roleAndDate, 30)
-  const roleAndDateLeftPos = pageWidth/2 - roleAndDateWidth/2
+  const role = voyager.role
+  const roleWidth = helveticaBoldObliqueFont.widthOfTextAtSize(role, 18)
+  const roleLeftPos = pageWidth/2 - roleWidth/2
   
-  certPage.moveTo(roleAndDateLeftPos, 445)
-  certPage.drawText(roleAndDate, {
+  certPage.moveTo(roleLeftPos, 295)
+  certPage.drawText(role, {
     font: helveticaFont,
-    size: 30,
-    color: rgb(.267,.267,.275),
+    size: 18
   })
 
   // Add the Voyage name to the page
-  certPage.moveTo(675, 370)
-  certPage.drawText('Voyage #'.concat(voyager.voyage.slice(1)), {
-    font: helveticaBoldObliqueFont,
-    size: 36,
+  certPage.moveTo(405, 672)
+  const helveticaObliqueFont = await document.embedFont(StandardFonts.HelveticaOblique)
+  certPage.drawText(voyager.voyage.slice(1), {
+    font: helveticaObliqueFont,
+    size: 24,
   })
 
   // Add the repo & deployment URL's to the page
-  certPage.moveTo(240, 250)
+  certPage.moveTo(20, 75)
   certPage.drawText('Repo: '.concat(voyager.repo_url), {
     font: helveticaFont,
-    size: 24,
+    size: 12,
     color: rgb(0, 0.53, 0.71)
   })
   const repoLink = createPageLinkAnnotation(certPage, voyager.repo_url)
   certPage.node.set(PDFName.of('Annots'), document.context.obj([repoLink]))
 
-  certPage.moveTo(240, 225)
+  certPage.moveTo(20, 60)
   certPage.drawText('Deployed at: '.concat(voyager.deployed_url), {
     font: helveticaFont,
-    size: 24,
+    size: 12,
     color: rgb(0, 0.53, 0.71)
   })
   const deployLink = createPageLinkAnnotation(certPage, voyager.deployed_url)

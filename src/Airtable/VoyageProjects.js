@@ -9,6 +9,7 @@ const getSuccessfulVoyagers = async (voyageName) => {
     if (process.env.TEAMS === 'ALL') {
       // Create a filter to extract all team members who successfully completed
       // TODO: Add environment variable to specify exact roles to be included
+      /*
       filter = "AND(" + 
         "{What is your Voyage?} = \"" + voyageName + "\", " + 
         "{Completed Voyage?} = \"Yes\", " + 
@@ -16,7 +17,7 @@ const getSuccessfulVoyagers = async (voyageName) => {
            "{Product} != \"\" " +
         ") " +
       ")"
-      /*
+      */
       filter = "AND(" + 
         "{What is your Voyage?} = \"" + voyageName + "\", " + 
         "{Completed Voyage?} = \"Yes\", " + 
@@ -27,7 +28,6 @@ const getSuccessfulVoyagers = async (voyageName) => {
           "{Role (from Voyage Signups Link)} != \"Voyage Guide\" " +
         ")" +
       ")"
-      */
     } else {
       // Create a filter to extract team members from specific teams who 
       // successfully completed
