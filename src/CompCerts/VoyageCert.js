@@ -23,7 +23,7 @@ const createPageLinkAnnotation = (page, uri) => {
 
 const createPDF = async (voyager) => {
   const document = await PDFDocument
-    .load(readFileSync(process.env.TEMPLATE_PATH)) // TODO: Move outside the Voyager processing loop
+    .load(readFileSync(process.env.TEMPLATE_PATH)) 
   const helveticaFont = await document.embedFont(StandardFonts.Helvetica)
   const helveticaObliqueFont = await document.embedFont(StandardFonts.HelveticaOblique)
   const helveticaBoldObliqueFont = await document.embedFont(StandardFonts.HelveticaBoldOblique)
