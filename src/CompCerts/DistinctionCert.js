@@ -1,11 +1,11 @@
 import { PDFDocument, PDFName, PDFString, StandardFonts, rgb } from "pdf-lib"
 import { writeFileSync, readFileSync } from "fs"
 import { sendMail } from '../Mailjet/sendMail.js'
-import recipients from '../../config/cert_of_distinction_20240305.json' assert { type: "json" }
+import recipients from '../../config/cert_of_distinction_20240701.json' assert { type: "json" }
 
 async function createPDF(recipient) {
   const document = await PDFDocument
-    .load(readFileSync(process.env.TEMPLATE_PATH)) // TODO: Move outside the Voyager processing loop
+    .load(readFileSync(process.env.TEMPLATE_PATH)) 
   const helveticaFont = await document.embedFont(StandardFonts.Helvetica)
   const helveticaBoldObliqueFont = await document.embedFont(StandardFonts.HelveticaBoldOblique)
   const certPage = document.getPage(0)
@@ -59,7 +59,7 @@ const createDistinctionCert = async () => {
     // Convert the PDF to base64 and email it via MailJet
     if (process.env.MODE.toUpperCase() === 'EMAIL') {
       base64Cert = await certDocument.saveAsBase64()
-      sendMail(recipient.email, recipient.certificate_name, 'cert.pdf', base64Cert, process.env.AGILE_CERT_TEMPLATE_ID)
+      sendMail(recipient.email, recipient.certificate_name, 'cert.pdf', base64Cert, process.env.VOYAGE_CERT_TEMPLATE_ID)
     }
   }
 }
