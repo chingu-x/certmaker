@@ -23,55 +23,65 @@ const createPageLinkAnnotation = (page, uri) => {
 
 const createPDF = async (voyager) => {
   const document = await PDFDocument
-    .load(readFileSync(process.env.TEMPLATE_PATH)) // TODO: Move outside the Voyager processing loop
+    .load(readFileSync(process.env.TEMPLATE_PATH)) 
   const helveticaFont = await document.embedFont(StandardFonts.Helvetica)
+  const helveticaObliqueFont = await document.embedFont(StandardFonts.HelveticaOblique)
   const helveticaBoldObliqueFont = await document.embedFont(StandardFonts.HelveticaBoldOblique)
   const certPage = document.getPage(0)
+
+  // Add the Voyage name to the page
+  certPage.moveTo(405, 672)
+  certPage.drawText(voyager.voyage.slice(1), {
+    font: helveticaFont,
+    size: 24,
+  })
 
   // Center the participants name & add it to the page
   const pageWidth = certPage.getWidth()
   const voyagerNameWidth = helveticaBoldObliqueFont.widthOfTextAtSize(voyager.certificate_name, 48)
   const voyagerNameLeftPos = pageWidth/2 - voyagerNameWidth/2
 
-  certPage.moveTo(voyagerNameLeftPos,600)
+  certPage.moveTo(voyagerNameLeftPos,400)
   certPage.drawText(voyager.certificate_name, {
     font: helveticaBoldObliqueFont,
     size: 48,
   })
 
-  // Add the Voyager role & certificate date to the page
-  const roleAndDate = voyager.role.concat(' on ', process.env.COMPLETION_DATE)
-  const roleAndDateWidth = helveticaBoldObliqueFont.widthOfTextAtSize(roleAndDate, 30)
-  const roleAndDateLeftPos = pageWidth/2 - roleAndDateWidth/2
+  // Add the Voyager role to the page
+  const role = voyager.role
+  const roleWidth = helveticaBoldObliqueFont.widthOfTextAtSize(role, 18)
+  const roleLeftPos = pageWidth/2 - roleWidth/2
   
-  certPage.moveTo(roleAndDateLeftPos, 445)
-  certPage.drawText(roleAndDate, {
+  certPage.moveTo(roleLeftPos, 295)
+  certPage.drawText(role, {
     font: helveticaFont,
-    size: 30,
-    color: rgb(.267,.267,.275),
+    size: 18
   })
 
-  // Add the Voyage name to the page
-  certPage.moveTo(675, 370)
-  certPage.drawText('Voyage #'.concat(voyager.voyage.slice(1)), {
-    font: helveticaBoldObliqueFont,
-    size: 36,
+  // Add the certificate date to the page
+  const certDate = process.env.COMPLETION_DATE
+  const certDateWidth = helveticaBoldObliqueFont.widthOfTextAtSize(certDate, 30)
+  
+  certPage.moveTo(355, 185)
+  certPage.drawText(certDate, {
+    font: helveticaFont,
+    size: 16
   })
 
   // Add the repo & deployment URL's to the page
-  certPage.moveTo(240, 250)
+  certPage.moveTo(20, 75)
   certPage.drawText('Repo: '.concat(voyager.repo_url), {
     font: helveticaFont,
-    size: 24,
+    size: 12,
     color: rgb(0, 0.53, 0.71)
   })
   const repoLink = createPageLinkAnnotation(certPage, voyager.repo_url)
   certPage.node.set(PDFName.of('Annots'), document.context.obj([repoLink]))
 
-  certPage.moveTo(240, 225)
+  certPage.moveTo(20, 60)
   certPage.drawText('Deployed at: '.concat(voyager.deployed_url), {
     font: helveticaFont,
-    size: 24,
+    size: 12,
     color: rgb(0, 0.53, 0.71)
   })
   const deployLink = createPageLinkAnnotation(certPage, voyager.deployed_url)
@@ -94,7 +104,7 @@ const createVoyageCert = async () => {
   let certDocument
   let base64Cert
   for (let voyager of successfulVoyagers) {
-    console.log(`Processing certificate for ${ voyager.certificate_name }...`)
+    console.log(`Processing certificate for ${ voyager.discord_name } / ${ voyager.certificate_name }...`)
     // Generate the certificate PDF for this Voyager
     certDocument = await createPDF(voyager)
       .catch((err) => {
