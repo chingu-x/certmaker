@@ -9,24 +9,17 @@ const getSuccessfulVoyagers = async (voyageName) => {
     if (process.env.TEAMS === 'ALL') {
       // Create a filter to extract all team members who successfully completed
       // TODO: Add environment variable to specify exact roles to be included
-      /*
       filter = "AND(" + 
         "{What is your Voyage?} = \"" + voyageName + "\", " + 
         "{Completed Voyage?} = \"Yes\", " + 
-        "OR({Role (from Voyage Signups Link)} = \"Voyage Guide\", " + 
-           "{Product} != \"\" " +
-        ") " +
-      ")"
-      */
-      filter = "AND(" + 
-        "{What is your Voyage?} = \"" + voyageName + "\", " + 
-        "{Completed Voyage?} = \"Yes\", " + 
-        "AND({Role (from Voyage Signups Link)} != \"Developer\", " + 
-          "{Role (from Voyage Signups Link)} != \"UI/UX\", " +
-          "{Role (from Voyage Signups Link)} != \"UI/UX Designer\", " +
-          "{Role (from Voyage Signups Link)} != \"Data Scientist\", " +
-          "{Role (from Voyage Signups Link)} != \"Voyage Guide\" " +
-        ")" +
+        "OR({Role (from Voyage Signups Link)} = \"Developer\", " + 
+          "{Role (from Voyage Signups Link)} = \"UI/UX\", " +
+          "{Role (from Voyage Signups Link)} = \"UI/UX Designer\", " +
+          "{Role (from Voyage Signups Link)} = \"Data Scientist\", " +
+          "{Role (from Voyage Signups Link)} = \"Voyage Guide\", " +
+          "{Role (from Voyage Signups Link)} = \"Scrum Master\", " +
+          "{Role (from Voyage Signups Link)} = \"Product Owner\" " +
+          ")" +
       ")"
     } else {
       // Create a filter to extract team members from specific teams who 
