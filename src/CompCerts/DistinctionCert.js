@@ -1,7 +1,7 @@
 import { PDFDocument, PDFName, PDFString, StandardFonts, rgb } from "pdf-lib"
 import { writeFileSync, readFileSync } from "fs"
 import { sendMail } from '../Mailjet/sendMail.js'
-import recipients from '../../config/cert_of_distinction_20240701.json' assert { type: "json" }
+import recipients from '../../config/cert_of_distinction_20241021.json' assert { type: "json" }
 
 async function createPDF(recipient) {
   const document = await PDFDocument
@@ -12,25 +12,23 @@ async function createPDF(recipient) {
 
   // Center the participants name & add it to the page
   const pageWidth = certPage.getWidth()
-  const recipientNameWidth = helveticaBoldObliqueFont.widthOfTextAtSize(recipient.certificate_name, 48)
-  const recipientNameLeftPos = pageWidth/2 - recipientNameWidth/2
+  const voyagerNameWidth = helveticaBoldObliqueFont.widthOfTextAtSize(recipient.certificate_name, 48)
+  const voyagerNameLeftPos = pageWidth/2 - voyagerNameWidth/2
 
-  certPage.moveTo(recipientNameLeftPos, 570)
+  certPage.moveTo(voyagerNameLeftPos,400)
   certPage.drawText(recipient.certificate_name, {
     font: helveticaBoldObliqueFont,
     size: 48,
   })
 
-  // Add the Voyager role & certificate date to the page
-  const date = process.env.COMPLETION_DATE
-  const dateWidth = helveticaBoldObliqueFont.widthOfTextAtSize(date, 30)
-  const dateLeftPos = 445 - dateWidth/2
+  // Add the certificate date to the page
+  const certDate = process.env.COMPLETION_DATE
+  const certDateWidth = helveticaBoldObliqueFont.widthOfTextAtSize(certDate, 30)
   
-  certPage.moveTo(dateLeftPos, 285)
-  certPage.drawText(date, {
+  certPage.moveTo(355, 185)
+  certPage.drawText(certDate, {
     font: helveticaFont,
-    size: 24,
-    color: rgb(.267,.267,.275),
+    size: 16
   })
 
   // Write the completed certificate to the local file system
