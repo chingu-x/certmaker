@@ -21,7 +21,19 @@ async function createPDF(recipient) {
     size: 28,
   })
 
-  // Add the Voyager role & certificate date to the page
+  // Add the participant role to the page
+  const role = recipient.role
+  const roleWidth = helveticaBoldObliqueFont.widthOfTextAtSize(role, 30)
+  const roleLeftPos = pageWidth/2 - roleWidth/2 + 50
+  
+  certPage.moveTo(roleLeftPos, 182)
+  certPage.drawText(role, {
+    font: helveticaFont,
+    size: 20,
+    color: rgb(.267,.267,.275),
+  })
+
+  // Add the certificate date to the page
   const date = process.env.COMPLETION_DATE
   const dateWidth = helveticaBoldObliqueFont.widthOfTextAtSize(date, 30)
   const dateLeftPos = 650 - dateWidth/2
