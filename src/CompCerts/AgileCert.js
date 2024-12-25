@@ -15,7 +15,7 @@ async function createPDF(recipient) {
   const recipientNameWidth = helveticaBoldObliqueFont.widthOfTextAtSize(recipient.certificate_name, 28)
   const recipientNameLeftPos = pageWidth/2 - recipientNameWidth/2
 
-  certPage.moveTo(recipientNameLeftPos, 270)
+  certPage.moveTo(recipientNameLeftPos, 310)
   certPage.drawText(recipient.certificate_name, {
     font: helveticaBoldObliqueFont,
     size: 28,
@@ -26,7 +26,7 @@ async function createPDF(recipient) {
   const roleWidth = helveticaBoldObliqueFont.widthOfTextAtSize(role, 30)
   const roleLeftPos = pageWidth/2 - roleWidth/2 + 50
   
-  certPage.moveTo(roleLeftPos, 182)
+  certPage.moveTo(roleLeftPos, 222)
   certPage.drawText(role, {
     font: helveticaFont,
     size: 20,
