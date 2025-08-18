@@ -21,6 +21,7 @@ const getSuccessfulVoyagers = async (voyageName) => {
       filter = "AND(" + 
         "{What is your Voyage?} = \"" + voyageName + "\", " + 
         "{Completed Voyage?} = \"Yes\", " + 
+        "{Completion Status} = \"Cert issued\", " +
         roleQuery +
       ")"
     } else {

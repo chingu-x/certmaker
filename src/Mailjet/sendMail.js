@@ -8,6 +8,10 @@ const sendMail = (toEmail, toName, attachmentFileName, attachmentBase64, templat
   .request({
     "Messages":[
       {
+          "From": {
+            "Email": "service@chingu.io",
+            "Name": "Chingu Admin Team"
+          },
         "To": [
           {
             "Email": `${ toEmail }`,
