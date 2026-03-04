@@ -1,7 +1,7 @@
 import { PDFDocument, PDFName, PDFString, StandardFonts, rgb } from "pdf-lib"
 import { writeFileSync, readFileSync } from "fs"
 import { sendMail } from '../Mailjet/sendMail.js'
-import recipients from '../../config/2023_holiday_hackathon_recipients.json' assert { type: "json" }
+import recipients from '../../config/2023_holiday_hackathon_recipients.json' with { type: "json" }
 
 async function createPDF(recipient) {
   const document = await PDFDocument
