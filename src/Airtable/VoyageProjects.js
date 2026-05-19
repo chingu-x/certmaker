@@ -43,7 +43,7 @@ const getSuccessfulVoyagers = async (voyageName) => {
       filter = "AND(" + 
         "{What is your Voyage?} = \"" + voyageName + "\", " + 
         "{Completed Voyage?} = \"Yes\" , " + 
-        "OR({Role (from Voyage Signups Link)} = \"Voyage Guide\", " + 
+        "OR({Role (from Voyage Signups Link)} = \"Technical Guide\", " + 
            "{Product} != \"\" " +
         "), " +
         "OR(" + orClause + ") " + 
