@@ -6,8 +6,9 @@ import config from '../../config/DistinctionConfig.js'
 import recipients from '../../config/cert_of_distinction_recipients.json' with { type: "json" }
 
 async function createPDF(recipient) {
+  const pdfTemplateBytes = readFileSync(join(import.meta.dirname, config.TEMPLATE_PATH))
   const document = await PDFDocument
-    .load(readFileSync(config.TEMPLATE_PATH)) 
+  .load(pdfTemplateBytes)
   const { signatureFont, helveticaFont, helveticaBoldObliqueFont } = await getFonts(document, config)
   const certPage = document.getPage(0)
 

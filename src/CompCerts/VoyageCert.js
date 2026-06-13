@@ -1,5 +1,6 @@
 import { PDFDocument, PDFName, PDFString, rgb } from "pdf-lib"
 import { writeFileSync, readFileSync } from "fs"
+import { join } from 'path'
 import { getSuccessfulVoyagers } from '../Airtable/VoyageProjects.js'
 import { sendMail } from '../Mailjet/sendMail.js'
 import { getFonts } from '../Util/util.js'
@@ -24,9 +25,10 @@ const createPageLinkAnnotation = (page, uri) => {
 }
 
 const createPDF = async (voyager) => {
+  const pdfTemplateBytes = readFileSync(join(import.meta.dirname, config.TEMPLATE_PATH))
   const document = await PDFDocument
-    .load(readFileSync(config.TEMPLATE_PATH)) 
-  const { signatureFont, helveticaFont, helveticaBoldObliqueFont } = await getFonts(document, confiig)
+  .load(pdfTemplateBytes)
+  const { signatureFont, helveticaFont, helveticaBoldObliqueFont } = await getFonts(document, config)
   const certPage = document.getPage(0)
 
   // Add the Voyage name to the page
@@ -43,7 +45,7 @@ const createPDF = async (voyager) => {
 
   certPage.moveTo(voyagerNameLeftPos,400)
   certPage.drawText(voyager.certificate_name, {
-    font: helveticaBoldObliqueFont,
+    font: signatureFont,
     size: 40,
   })
 

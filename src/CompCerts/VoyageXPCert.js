@@ -1,7 +1,6 @@
 import { PDFDocument, PDFName, PDFString, rgb } from 'pdf-lib'
 import { writeFileSync, readFileSync } from 'fs'
 import { join } from 'path'
-import { fileURLToPath } from 'url'
 import { getSuccessfulVoyagers } from '../Airtable/VoyageProjects.js'
 import { sendMail } from '../Mailjet/sendMail.js'
 import { getFonts } from '../Util/util.js'
@@ -26,7 +25,6 @@ const createPageLinkAnnotation = (page, uri) => {
 }
 
 const createPDF = async (voyager) => {
-  console.log(`import.meta.dirname: ${ import.meta.dirname }`)
   const pdfTemplateBytes = readFileSync(join(import.meta.dirname, config.TEMPLATE_PATH))
   const document = await PDFDocument
   .load(pdfTemplateBytes)
