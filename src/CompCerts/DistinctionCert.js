@@ -1,13 +1,13 @@
-import { PDFDocument, PDFName, PDFString, StandardFonts, rgb } from "pdf-lib"
+import { PDFDocument, PDFName, PDFString, rgb } from "pdf-lib"
 import { writeFileSync, readFileSync } from "fs"
 import { sendMail } from '../Mailjet/sendMail.js'
+import { getFonts } from '../Util/util.js'
 import recipients from '../../config/cert_of_distinction_recipients.json' with { type: "json" }
 
 async function createPDF(recipient) {
   const document = await PDFDocument
     .load(readFileSync(process.env.TEMPLATE_PATH)) 
-  const helveticaFont = await document.embedFont(StandardFonts.Helvetica)
-  const helveticaBoldObliqueFont = await document.embedFont(StandardFonts.HelveticaBoldOblique)
+  const { signatureFont, helveticaFont, helveticaBoldObliqueFont } = await getFonts(document)
   const certPage = document.getPage(0)
 
   // Center the participants name & add it to the page
@@ -17,7 +17,7 @@ async function createPDF(recipient) {
 
   certPage.moveTo(voyagerNameLeftPos,400)
   certPage.drawText(recipient.certificate_name, {
-    font: helveticaBoldObliqueFont,
+    font: signatureFont,
     size: 48,
   })
 

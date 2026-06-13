@@ -1,8 +1,8 @@
-import { PDFDocument, PDFName, PDFString, StandardFonts, rgb } from 'pdf-lib'
-import fontkit from '@pdf-lib/fontkit'
+import { PDFDocument, PDFName, PDFString, rgb } from 'pdf-lib'
 import { writeFileSync, readFileSync } from 'fs'
 import { getSuccessfulVoyagers } from '../Airtable/VoyageProjects.js'
 import { sendMail } from '../Mailjet/sendMail.js'
+import { getFonts } from '../Util/util.js'
 
 // Copied from https://github.com/Hopding/pdf-lib/issues/555#issuecomment-670241308
 const createPageLinkAnnotation = (page, uri) => {
@@ -25,16 +25,7 @@ const createPageLinkAnnotation = (page, uri) => {
 const createPDF = async (voyager) => {
   const document = await PDFDocument
     .load(readFileSync(process.env.TEMPLATE_PATH))
-
-  // Use a signature font for the Voyager's name on the certificate  
-  document.registerFontkit(fontkit)
-  const localFontPath = process.env.NAME_FONT_PATH
-  const fontBytes = readFileSync(localFontPath)
-  const signatureFont = await document.embedFont(fontBytes)
-
-  const helveticaFont = await document.embedFont(StandardFonts.Helvetica)
-  const helveticaBoldObliqueFont = await document.embedFont(StandardFonts.HelveticaBoldOblique)
-
+  const { signatureFont, helveticaFont, helveticaBoldObliqueFont } = await getFonts(document)
   const certPage = document.getPage(0)
 
   // Add the Voyage name to the page
