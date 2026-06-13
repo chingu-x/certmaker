@@ -11,6 +11,7 @@
   "author": "Jim D. Medlock",
   "license": "ISC",
   "dependencies": {
+    "@pdf-lib/fontkit": "^1.1.1",
     "airtable": "^0.11.6",
     "dotenv": "^16.0.3",
     "node-mailjet": "^6.0.2",

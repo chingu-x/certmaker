@@ -24,9 +24,11 @@ const createPageLinkAnnotation = (page, uri) => {
 const createPDF = async (voyager) => {
   const document = await PDFDocument
     .load(readFileSync(process.env.TEMPLATE_PATH)) 
+
   const helveticaFont = await document.embedFont(StandardFonts.Helvetica)
-  //const helveticaObliqueFont = await document.embedFont(StandardFonts.HelveticaOblique)
+  const timesFont = await document.embedFont(StandardFonts.TimesRomanItalic)
   const helveticaBoldObliqueFont = await document.embedFont(StandardFonts.HelveticaBoldOblique)
+
   const certPage = document.getPage(0)
 
   // Add the Voyage name to the page
@@ -38,12 +40,12 @@ const createPDF = async (voyager) => {
 
   // Center the participants name & add it to the page
   const pageWidth = certPage.getWidth()
-  const voyagerNameWidth = helveticaBoldObliqueFont.widthOfTextAtSize(voyager.certificate_name, 40)
+  const voyagerNameWidth = timesFont.widthOfTextAtSize(voyager.certificate_name, 40)
   const voyagerNameLeftPos = pageWidth/2 - voyagerNameWidth/2
 
   certPage.moveTo(voyagerNameLeftPos,290)
   certPage.drawText(voyager.certificate_name, {
-    font: helveticaBoldObliqueFont,
+    font: timesFont,
     size: 40,
   })
 
