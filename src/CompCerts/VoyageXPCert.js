@@ -1,5 +1,6 @@
-import { PDFDocument, PDFName, PDFString, StandardFonts, rgb } from "pdf-lib"
-import { writeFileSync, readFileSync } from "fs"
+import { PDFDocument, PDFName, PDFString, StandardFonts, rgb } from 'pdf-lib'
+import fontkit from '@pdf-lib/fontkit'
+import { writeFileSync, readFileSync } from 'fs'
 import { getSuccessfulVoyagers } from '../Airtable/VoyageProjects.js'
 import { sendMail } from '../Mailjet/sendMail.js'
 
@@ -23,10 +24,15 @@ const createPageLinkAnnotation = (page, uri) => {
 
 const createPDF = async (voyager) => {
   const document = await PDFDocument
-    .load(readFileSync(process.env.TEMPLATE_PATH)) 
+    .load(readFileSync(process.env.TEMPLATE_PATH))
+
+  // Use a signature font for the Voyager's name on the certificate  
+  document.registerFontkit(fontkit)
+  const localFontPath = process.env.NAME_FONT_PATH
+  const fontBytes = readFileSync(localFontPath)
+  const signatureFont = await document.embedFont(fontBytes)
 
   const helveticaFont = await document.embedFont(StandardFonts.Helvetica)
-  const timesFont = await document.embedFont(StandardFonts.TimesRomanItalic)
   const helveticaBoldObliqueFont = await document.embedFont(StandardFonts.HelveticaBoldOblique)
 
   const certPage = document.getPage(0)
@@ -40,12 +46,12 @@ const createPDF = async (voyager) => {
 
   // Center the participants name & add it to the page
   const pageWidth = certPage.getWidth()
-  const voyagerNameWidth = timesFont.widthOfTextAtSize(voyager.certificate_name, 40)
+  const voyagerNameWidth = signatureFont.widthOfTextAtSize(voyager.certificate_name, 40)
   const voyagerNameLeftPos = pageWidth/2 - voyagerNameWidth/2
 
   certPage.moveTo(voyagerNameLeftPos,290)
   certPage.drawText(voyager.certificate_name, {
-    font: timesFont,
+    font: signatureFont,
     size: 40,
   })
 
