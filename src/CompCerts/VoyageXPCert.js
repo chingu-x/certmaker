@@ -25,8 +25,10 @@ const createPageLinkAnnotation = (page, uri) => {
 const createPDF = async (voyager) => {
   const document = await PDFDocument
     .load(readFileSync(process.env.TEMPLATE_PATH))
+
+  // Use a signature font for the Voyager's name on the certificate  
   document.registerFontkit(fontkit)
-  const localFontPath = './assets/BrittanySignature.ttf'
+  const localFontPath = process.env.NAME_FONT_PATH
   const fontBytes = readFileSync(localFontPath)
   const signatureFont = await document.embedFont(fontBytes)
 

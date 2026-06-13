@@ -68,6 +68,7 @@ in the `.env` file.
 | MODE | Mode of operation. `EMAIL` will generate & email certificates. `NOEMAIL` or omitted will generate certificates, but not email them. |
 | COMPLETION_DATE | Date to be added to certificates (e.g. 'April 23, 2023') |
 | CERTIFICATE_PATH | Path for where certificates will be stored on the local computer (e.g. /Users/jim/Downloads/Chingu_V42_Certificates/) |
+| NAME_FONT_PATH | Path the True Type (`.ttf`) font for participant names |
 | TEMPLATE_PATH | Path to the PDF file that's the template to be customized for each Voyager |
 |            | **__For Voyage Certificates:__** |
 | VOYAGE         | The Voyage name (e.g. 'V99') certificates are to be produced for. |
@@ -95,6 +96,7 @@ TYPE=VOYAGE
 MODE=NOEMAIL
 COMPLETION_DATE=April 23, 2023
 CERTIFICATE_PATH=/Users/jim/Downloads/Chingu_V42_Certificates/
+NAME_FONT_PATH=./assets/fonts/SnellRoundhand.ttf
 TEMPLATE_PATH=./assets/Chingu Voyage Completion Certificate (V5.0) - Template.pdf
 # Voyage Filters
 VOYAGE=V42
@@ -126,6 +128,7 @@ TYPE=VOYAGE
 MODE=EMAIL
 COMPLETION_DATE=April 23, 2023
 CERTIFICATE_PATH=/Users/jim/Downloads/Chingu_V42_Certificates/
+NAME_FONT_PATH=./assets/fonts/SnellRoundhand.ttf
 TEMPLATE_PATH=./assets/Chingu Voyage Completion Certificate (V5.0) - Template.pdf
 # Voyage Filters
 VOYAGE=V42
@@ -156,6 +159,7 @@ MODE=NOEMAIL
 COMPLETION_DATE=December 27, 2023
 RECIPIENTS=./config/2023_holiday_hackathon_recipients.json
 CERTIFICATE_PATH=/Users/jim/Downloads/Holiday_Hackathon_Certificates/
+NAME_FONT_PATH=./assets/fonts/SnellRoundhand.ttf
 TEMPLATE_PATH=./assets/Chingu Holiday Hackathon 2023 Certificate (v1.0) - Template .pdf
 
 ```
