@@ -2,12 +2,13 @@ import { PDFDocument, PDFName, PDFString, rgb } from "pdf-lib"
 import { writeFileSync, readFileSync } from "fs"
 import { sendMail } from '../Mailjet/sendMail.js'
 import { getFonts } from '../Util/util.js'
+import config from '../../config/DistinctionConfig.js'
 import recipients from '../../config/cert_of_distinction_recipients.json' with { type: "json" }
 
 async function createPDF(recipient) {
   const document = await PDFDocument
-    .load(readFileSync(process.env.TEMPLATE_PATH)) 
-  const { signatureFont, helveticaFont, helveticaBoldObliqueFont } = await getFonts(document)
+    .load(readFileSync(config.TEMPLATE_PATH)) 
+  const { signatureFont, helveticaFont, helveticaBoldObliqueFont } = await getFonts(document, config)
   const certPage = document.getPage(0)
 
   // Center the participants name & add it to the page
@@ -22,7 +23,7 @@ async function createPDF(recipient) {
   })
 
   // Add the certificate date to the page
-  const certDate = process.env.COMPLETION_DATE
+  const certDate = config.COMPLETION_DATE
   const certDateWidth = helveticaBoldObliqueFont.widthOfTextAtSize(certDate, 30)
   
   certPage.moveTo(355, 185)
@@ -32,7 +33,7 @@ async function createPDF(recipient) {
   })
 
   // Write the completed certificate to the local file system
-  writeFileSync(process.env.CERTIFICATE_PATH
+  writeFileSync(config.CERTIFICATE_PATH
     .concat('Chingu Cert of Distinction - ', recipient.certificate_name,'.pdf'), await document.save())
 
   // Return the certificate pdf so it can be emailed
@@ -57,7 +58,7 @@ const createDistinctionCert = async () => {
     // Convert the PDF to base64 and email it via MailJet
     if (process.env.MODE.toUpperCase() === 'EMAIL') {
       base64Cert = await certDocument.saveAsBase64()
-      sendMail(recipient.email, recipient.certificate_name, 'cert.pdf', base64Cert, process.env.VOYAGE_CERT_TEMPLATE_ID)
+      sendMail(recipient.email, recipient.certificate_name, 'cert.pdf', base64Cert, config.VOYAGE_CERT_TEMPLATE_ID)
     }
   }
 }

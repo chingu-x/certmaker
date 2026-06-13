@@ -1,13 +1,13 @@
 import Airtable from 'airtable'
 
 // Retrieve the Voyagers who successfully completed the Voyage
-const getSuccessfulVoyagers = async (voyageName) => {
+const getSuccessfulVoyagers = async (voyageName, roles, teams) => {
   return new Promise(async (resolve, reject) => {
     let voyagers = []
     let filter 
     
     // Construct a role filter to select only desired roles
-    const rolesToSelect = (process.env.ROLES).split(',')
+    const rolesToSelect = (roles).split(',')
     let roleQuery = 'OR('
     for (let role of rolesToSelect) {
       roleQuery = roleQuery.concat(`{Role (from Voyage Signups Link)} = \"${ role }\",`)
@@ -15,7 +15,7 @@ const getSuccessfulVoyagers = async (voyageName) => {
     roleQuery = roleQuery.slice(0,roleQuery.length-1)
     roleQuery = roleQuery.concat(')')
 
-    if (process.env.TEAMS === 'ALL') {
+    if (teams === 'ALL') {
       // Create a filter to extract all team members who successfully completed
       // TODO: Add environment variable to specify exact roles to be included
       filter = "AND(" + 

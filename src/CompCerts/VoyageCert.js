@@ -3,6 +3,7 @@ import { writeFileSync, readFileSync } from "fs"
 import { getSuccessfulVoyagers } from '../Airtable/VoyageProjects.js'
 import { sendMail } from '../Mailjet/sendMail.js'
 import { getFonts } from '../Util/util.js'
+import config from '../../config/VoyageConfig.js'
 
 // Copied from https://github.com/Hopding/pdf-lib/issues/555#issuecomment-670241308
 const createPageLinkAnnotation = (page, uri) => {
@@ -24,8 +25,8 @@ const createPageLinkAnnotation = (page, uri) => {
 
 const createPDF = async (voyager) => {
   const document = await PDFDocument
-    .load(readFileSync(process.env.TEMPLATE_PATH)) 
-  const { signatureFont, helveticaFont, helveticaBoldObliqueFont } = await getFonts(document)
+    .load(readFileSync(config.TEMPLATE_PATH)) 
+  const { signatureFont, helveticaFont, helveticaBoldObliqueFont } = await getFonts(document, confiig)
   const certPage = document.getPage(0)
 
   // Add the Voyage name to the page
@@ -58,7 +59,7 @@ const createPDF = async (voyager) => {
   })
 
   // Add the certificate date to the page
-  const certDate = process.env.COMPLETION_DATE
+  const certDate = config.COMPLETION_DATE
   const certDateWidth = helveticaBoldObliqueFont.widthOfTextAtSize(certDate, 30)
   
   certPage.moveTo(355, 185)
@@ -88,7 +89,7 @@ const createPDF = async (voyager) => {
 
   // Write the completed certificate to the local file system
   const teamNo = voyager.team_no > 9 ? voyager.team_no : '0'.concat(voyager.team_no)
-  writeFileSync(process.env.CERTIFICATE_PATH
+  writeFileSync(config.CERTIFICATE_PATH
     .concat('Chingu Completion Cert - ',voyager.voyage,' - ',voyager.tier,'-',teamNo,' - ',
       voyager.certificate_name,'.pdf'), await document.save())
 
@@ -99,7 +100,7 @@ const createPDF = async (voyager) => {
 // Retrieve the Chingus who successfully completed the Voyage and generate
 // a Completion Certificate for each one.
 const createVoyageCert = async () => {
-  const successfulVoyagers = await getSuccessfulVoyagers(process.env.VOYAGE)
+  const successfulVoyagers = await getSuccessfulVoyagers(config.VOYAGE, config.ROLES, config.TEAMS)
   let certDocument
   let base64Cert
   for (let voyager of successfulVoyagers) {
@@ -114,7 +115,7 @@ const createVoyageCert = async () => {
     // Convert the PDF to base64 and email it via MailJet
     if (process.env.MODE.toUpperCase() === 'EMAIL') {
       base64Cert = await certDocument.saveAsBase64()
-      sendMail(voyager.email, voyager.certificate_name, 'cert.pdf', base64Cert, process.env.VOYAGE_CERT_TEMPLATE_ID)
+      sendMail(voyager.email, voyager.certificate_name, 'cert.pdf', base64Cert, config.VOYAGE_CERT_TEMPLATE_ID)
     }
   }
 }

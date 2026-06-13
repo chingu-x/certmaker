@@ -3,9 +3,9 @@ import fontkit from '@pdf-lib/fontkit'
 import { readFileSync } from 'fs'
 
 // Get fonts to be used in the certificate
-const getFonts = async (document) => {
+const getFonts = async (document, config) => {
   document.registerFontkit(fontkit)
-  const localFontPath = process.env.NAME_FONT_PATH
+  const localFontPath = config.NAME_FONT_PATH
   const fontBytes = readFileSync(localFontPath)
   const signatureFont = await document.embedFont(fontBytes)
   const helveticaFont = await document.embedFont(StandardFonts.Helvetica)
