@@ -1,12 +1,17 @@
-import { PDFDocument, PDFName, PDFString, rgb } from "pdf-lib"
+import { PDFDocument } from "pdf-lib"
 import { writeFileSync, readFileSync } from "fs"
 import { join } from 'path'
 import { sendMail } from '../Mailjet/sendMail.js'
 import { getFonts } from '../Util/util.js'
 import config from '../../config/DistinctionConfig.js'
-import recipients from '../../config/cert_of_distinction_recipients.json' with { type: "json" }
+import recipientsJson from '../../config/cert_of_distinction_recipients.json' with { type: "json" }
+import type { DistinctionRecipient } from '../Util/types.js'
 
-async function createPDF(recipient) {
+// The committed JSON is a placeholder; the local copy used at runtime has the
+// shape { recipients: DistinctionRecipient[] }.
+const recipients = recipientsJson as unknown as { recipients: DistinctionRecipient[] }
+
+async function createPDF(recipient: DistinctionRecipient): Promise<PDFDocument> {
   const pdfTemplateBytes = readFileSync(join(import.meta.dirname, config.TEMPLATE_PATH))
   const document = await PDFDocument
   .load(pdfTemplateBytes)
@@ -44,18 +49,20 @@ async function createPDF(recipient) {
 
 // Retrieve the Chingus who have performed a service to Chingu and generate
 // a Certificate of Distinction for each one.
-const createDistinctionCert = async () => {
+const createDistinctionCert = async (): Promise<void> => {
   console.log('createDistinctionCert - ')
-  let certDocument
   let base64Cert
-  for (let recipient of recipients.recipients) {
+  for (const recipient of recipients.recipients) {
     console.log(`Processing certificate for ${ recipient.certificate_name }...`)
     // Generate the certificate PDF for this Voyager
-    certDocument = await createPDF(recipient)
+    const certDocument = await createPDF(recipient)
       .catch((err) => {
         console.log('Error on recipient: ', recipient)
         console.log('Error: ', err)
+        return undefined
     })
+
+    if (!certDocument) continue
 
     // Convert the PDF to base64 and email it via MailJet
     if (process.env.MODE.toUpperCase() === 'EMAIL') {

@@ -1,11 +1,24 @@
 import Airtable from 'airtable'
+import type { Voyager } from '../Util/types.js'
+
+interface VoyageProjectFields extends Airtable.FieldSet {
+  'Email': string
+  'What is your Voyage?': string
+  'What is your Tier?': string
+  'What is your Team number?': number
+  'Discord Name (from Applications)': string
+  'Certificate name': string
+  'Role (from Voyage Signups Link)': string
+  'URL of your Github repo:': string
+  'URL of your deployed project:': string
+}
 
 // Retrieve the Voyagers who successfully completed the Voyage
-const getSuccessfulVoyagers = async (voyageName, roles, teams) => {
-  return new Promise(async (resolve, reject) => {
-    let voyagers = []
-    let filter 
-    
+const getSuccessfulVoyagers = async (voyageName: string, roles: string, teams: string): Promise<Voyager[]> => {
+  return new Promise<Voyager[]>(async (resolve, reject) => {
+    const voyagers: Voyager[] = []
+    let filter: string
+
     // Construct a role filter to select only desired roles
     const rolesToSelect = (roles).split(',')
     let roleQuery = 'OR('
@@ -27,7 +40,7 @@ const getSuccessfulVoyagers = async (voyageName, roles, teams) => {
     } else {
       // Create a filter to extract team members from specific teams who 
       // successfully completed
-      const teamNumbers = process.env.TEAMS.split(',')
+      const teamNumbers = (process.env.TEAMS ?? '').split(',')
       const teamConditions = teamNumbers.map(teamNumber => {
         return '{'.concat('What is your Team number?}',' = ',teamNumber)
       })
@@ -54,7 +67,7 @@ const getSuccessfulVoyagers = async (voyageName, roles, teams) => {
 
     const base = new Airtable({ apiKey: process.env.AIRTABLE_API_KEY }).base(process.env.AIRTABLE_BASE)
     
-    base('Voyage Projects').select({ 
+    base<VoyageProjectFields>('Voyage Projects').select({
       filterByFormula: filter,
       view: 'Voyage Project Submissions' 
     })
