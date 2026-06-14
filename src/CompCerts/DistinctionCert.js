@@ -1,5 +1,6 @@
 import { PDFDocument, PDFName, PDFString, rgb } from "pdf-lib"
 import { writeFileSync, readFileSync } from "fs"
+import { join } from 'path'
 import { sendMail } from '../Mailjet/sendMail.js'
 import { getFonts } from '../Util/util.js'
 import config from '../../config/DistinctionConfig.js'
