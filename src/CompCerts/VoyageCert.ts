@@ -1,11 +1,15 @@
-import { PDFDocument, PDFName, PDFString, StandardFonts, rgb } from "pdf-lib"
+import { PDFDocument, PDFName, PDFPage, PDFString, rgb } from "pdf-lib"
 import { writeFileSync, readFileSync } from "fs"
+import { join } from 'path'
 import { getSuccessfulVoyagers } from '../Airtable/VoyageProjects.js'
 import { sendMail } from '../Mailjet/sendMail.js'
+import { getFonts } from '../Util/util.js'
+import config from '../../config/VoyageConfig.js'
+import type { Voyager } from '../Util/types.js'
 
 // Copied from https://github.com/Hopding/pdf-lib/issues/555#issuecomment-670241308
-const createPageLinkAnnotation = (page, uri) => {
-  page.doc.context.register(
+const createPageLinkAnnotation = (page: PDFPage, uri: string) => {
+  return page.doc.context.register(
     page.doc.context.obj({
       Type: 'Annot',
       Subtype: 'Link',
@@ -21,12 +25,11 @@ const createPageLinkAnnotation = (page, uri) => {
   )
 }
 
-const createPDF = async (voyager) => {
+const createPDF = async (voyager: Voyager): Promise<PDFDocument> => {
+  const pdfTemplateBytes = readFileSync(join(import.meta.dirname, config.TEMPLATE_PATH))
   const document = await PDFDocument
-    .load(readFileSync(process.env.TEMPLATE_PATH)) 
-  const helveticaFont = await document.embedFont(StandardFonts.Helvetica)
-  //const helveticaObliqueFont = await document.embedFont(StandardFonts.HelveticaOblique)
-  const helveticaBoldObliqueFont = await document.embedFont(StandardFonts.HelveticaBoldOblique)
+  .load(pdfTemplateBytes)
+  const { signatureFont, helveticaFont, helveticaBoldObliqueFont } = await getFonts(document, config)
   const certPage = document.getPage(0)
 
   // Add the Voyage name to the page
@@ -43,7 +46,7 @@ const createPDF = async (voyager) => {
 
   certPage.moveTo(voyagerNameLeftPos,400)
   certPage.drawText(voyager.certificate_name, {
-    font: helveticaBoldObliqueFont,
+    font: signatureFont,
     size: 40,
   })
 
@@ -59,7 +62,7 @@ const createPDF = async (voyager) => {
   })
 
   // Add the certificate date to the page
-  const certDate = process.env.COMPLETION_DATE
+  const certDate = config.COMPLETION_DATE
   const certDateWidth = helveticaBoldObliqueFont.widthOfTextAtSize(certDate, 30)
   
   certPage.moveTo(355, 185)
@@ -88,8 +91,8 @@ const createPDF = async (voyager) => {
   certPage.node.set(PDFName.of('Annots'), document.context.obj([deployLink]))
 
   // Write the completed certificate to the local file system
-  const teamNo = voyager.team_no > 9 ? voyager.team_no : '0'.concat(voyager.team_no)
-  writeFileSync(process.env.CERTIFICATE_PATH
+  const teamNo = Number(voyager.team_no) > 9 ? voyager.team_no : '0'.concat(voyager.team_no)
+  writeFileSync(config.CERTIFICATE_PATH
     .concat('Chingu Completion Cert - ',voyager.voyage,' - ',voyager.tier,'-',teamNo,' - ',
       voyager.certificate_name,'.pdf'), await document.save())
 
@@ -99,23 +102,25 @@ const createPDF = async (voyager) => {
 
 // Retrieve the Chingus who successfully completed the Voyage and generate
 // a Completion Certificate for each one.
-const createVoyageCert = async () => {
-  const successfulVoyagers = await getSuccessfulVoyagers(process.env.VOYAGE)
-  let certDocument
+const createVoyageCert = async (): Promise<void> => {
+  const successfulVoyagers = await getSuccessfulVoyagers(config.VOYAGE, config.ROLES, config.TEAMS)
   let base64Cert
-  for (let voyager of successfulVoyagers) {
+  for (const voyager of successfulVoyagers) {
     console.log(`Processing certificate for ${ voyager.discord_name } / ${ voyager.certificate_name }...`)
     // Generate the certificate PDF for this Voyager
-    certDocument = await createPDF(voyager)
+    const certDocument = await createPDF(voyager)
       .catch((err) => {
         console.log('Error on Voyager: ', voyager)
         console.log('Error: ', err)
+        return undefined
     })
+
+    if (!certDocument) continue
 
     // Convert the PDF to base64 and email it via MailJet
     if (process.env.MODE.toUpperCase() === 'EMAIL') {
       base64Cert = await certDocument.saveAsBase64()
-      sendMail(voyager.email, voyager.certificate_name, 'cert.pdf', base64Cert, process.env.VOYAGE_CERT_TEMPLATE_ID)
+      sendMail(voyager.email, voyager.certificate_name, 'cert.pdf', base64Cert, config.VOYAGE_CERT_TEMPLATE_ID)
     }
   }
 }
