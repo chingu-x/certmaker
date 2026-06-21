@@ -15,6 +15,6 @@ import { createVoyageXPCert } from './CompCerts/VoyageXPCert.js'
       await createVoyageXPCert()
       break
     default: 
-      console.error(`Invalid TYPE option (${ process.env.TYPE }) specified in .env file. Valid options are 'VOYAGE' or 'HACKATHON'. Please correct and retry.`)
+      console.error(`Invalid TYPE option (${ process.env.TYPE }) specified in .env file. Valid options are 'VOYAGE', 'VOYAGEXP', 'DISTINCTION'. Please correct and retry.`)
   }
 })()
