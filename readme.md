@@ -58,19 +58,41 @@ flowchart TB
   J --> Z;
 ```
 
-1. Evaluate projects and update the `Voyage Projects` table as follows:
-    * Review their message counts and GitHub activity (for Devs)
-    * `Completed Voyage?` - Set to `Yes` or `No` based on whether the Voyager is deserving of a certificate
-    * `Completion Status` - Set to `Completed` for those who have successfully completed the Voyage. Use one of the other values for this column if they didn't meet requirements.
-    * `Certificate Issue Date` - don't update this yet
+Evaluate projects and update the `Voyage Projects` table as follows:
 
-2. Next, run the [Voyage Closure - Email Voyage Certificate Reminder](<https://n8n.chingu.io/workflow/6BdalWVK3Kof4VIT>) workflow to let those who passed know they should purchase a certificate product
+* Review their message counts and GitHub activity (for Devs)
+* `Completed Voyage?` - Set to `Yes` or `No` based on whether the Voyager is deserving of a certificate
+* `Completion Status` - Set to `Completed` for those who have successfully completed the Voyage. Use one of the other values for this column if they didn't meet requirements.
+* `Certificate Issue Date` - don't update this yet
 
-3. On the day you intend to produce the certificates
-    * Update `Completion Status` to `Cert Issued`
-    * Update  `Certificate Issue Date` to the last day of the Voyage - `2026-07-19`
-    * Run `chingu-x/certmaker` to produce the certificates. Update the `COMPLETION_DATE` environment variable to `July 19, 2026` and set `MODE=NOEMAIL` and run it to produce certificates on your local PC so you can spot check them.
-    * When you are ready to email them set `MODE=EMAIL` and rerun it
+Once the evaluations are complete, run the [Voyage Closure - Email Voyage Certificate Reminder](<https://n8n.chingu.io/workflow/6BdalWVK3Kof4VIT>) workflow to let those who passed know they should purchase a certificate product.
+
+#### Generating the Certificates
+
+```mermaid
+  flowchart TB
+  A0([START]) --> A;
+  A(Set `Completion Status`<br/>to `Cert Issued`) --> B(Set `Completion Status` to `Cert Issued`);
+  B --> C(Set `Certificate Issue Date` to the last day of the Voyage);
+  C --> D(Set `MODE=NOEMAIL` env variable);
+  D --> E(In `config/VoyageConfig.ts` set 'VOYAGE' & 'COMPLETION_DATE`);
+  E --> E1(Run `certmaker`);
+  E1 --> F(Spot check certificate files);
+  F --> G{Looks good?};
+  G -- No --> H(Fix issues);
+  H --> E;
+  G -- Yes --> I(Set `MODE=EMAIL` env variable);
+  I --> J(Run `certmaker`);
+  J --> K(Post announcement in `#vnn-announcements`);
+  K --> Z([END])
+```
+
+On the day you intend to produce the certificates:
+
+* Update `Completion Status` to `Cert Issued`
+* Update  `Certificate Issue Date` to the last day of the Voyage - `2026-07-19`
+* Run `chingu-x/certmaker` to produce the certificates. Update the `COMPLETION_DATE` environment variable to `July 19, 2026` and set `MODE=NOEMAIL` and run it to produce certificates on your local PC so you can spot check them.
+* When you are ready to email them set `MODE=EMAIL` and rerun it
 
 ## Installation
 
