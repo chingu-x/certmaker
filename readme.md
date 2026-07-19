@@ -1,8 +1,7 @@
+# certmaker
 
-
-
-[contributors-shield]: https://img.shields.io/github/contributors/chingu-x/certmaker.svg?style=for-the-badge
-[contributors-url]: https://github.com/chingu-x/certmaker/graphs/contributors
+[contributors-shield]:https://img.shields.io/github/contributors/chingu-x/certmaker.svg?style=for-the-badge
+[contributors-url]:https://github.com/chingu-x/certmaker/graphs/contributors
 [forks-shield]: https://img.shields.io/github/forks/chingu-x/certmaker.svg?style=for-the-badge
 [forks-url]: https://github.com/chingu-x/certmaker/network/members
 [stars-shield]: https://img.shields.io/github/stars/chingu-x/certmaker.svg?style=for-the-badge
@@ -15,13 +14,11 @@
 [![Stargazers][stars-shield]][stars-url]
 [![Issues][issues-shield]][issues-url]
 
-# certmaker
-
 certmaker creates Voyage Completion Certificates, VoyageXP Completion
 Certificates, and Certificates of Distinction for Chingu Voyagers and
 contributors.
 
-[Process Overview](#process-overview) - [Installation](#installation) - [Usage](#usage) - [Configuration](#configuration) - [Release History](#release-history) - [License](#license)
+[Process Overview](#process-overview) - [Usage](#usage) - [Installation](#installation) - [How to Run](#how-to-run) - [Configuration](#configuration) - [Release History](#release-history) - [License](#license)
 
 ## Process Overview
 
@@ -31,22 +28,69 @@ Certificates of Distinction it uses recipient data maintained in
 [`config/cert_of_distinction_recipients.json`](./config/cert_of_distinction_recipients.json)
 in this repo.
 
+## Usage
+
+### Voyage Certificates
+
+#### Project Evaluation
+
+```mermaid
+flowchart TB
+  A0([START]) --> A;
+  A(<a href='https://n8n.chingu.io/workflow/bTZJGP2HK1C7bcdj' target='_blank'>Populate `Voyage Projects` table</a>) --> B(Evaluate submitted projects);
+  B --> C{Sufficent team<br/>channel comm.?};
+  C -- Yes --> D{Developer};
+  D -- Yes --> E{Sufficient GitHub<br/>activity?};
+  E -- Yes --> F(Set `Completed<br/>Voyage` to `Yes`);
+  D -- No --> K{UI/UX<br/>?};
+  K -- Yes --> L{Contributed design?};
+  L -- Yes --> F;
+  L -- No --> I;
+  K -- No --> M{PO/SM<br/>?};
+  M -- Yes --> N{Coordinated team<br/>activity};
+  M -- No --> I;
+  N -- Yes --> F;
+  F --> G(Set `Completion Status` to `Completed`);
+  G --> H(<a href='https://n8n.chingu.io/workflow/6BdalWVK3Kof4VIT' target='_blank'>Email Voyage Cert<br/>purchase reminder</a>);
+  H --> Z([END]);
+  C -- No --> I(Set `Completed Voyage` to `No`);
+  I -- No --> J(Set `Completion Status` to appropriate selection);
+  J --> Z;
+```
+
+1. Evaluate projects and update the `Voyage Projects` table as follows:
+    * Review their message counts and GitHub activity (for Devs)
+    * `Completed Voyage?` - Set to `Yes` or `No` based on whether the Voyager is deserving of a certificate
+    * `Completion Status` - Set to `Completed` for those who have successfully completed the Voyage. Use one of the other values for this column if they didn't meet requirements.
+    * `Certificate Issue Date` - don't update this yet
+
+2. Next, run the [Voyage Closure - Email Voyage Certificate Reminder](<https://n8n.chingu.io/workflow/6BdalWVK3Kof4VIT>) workflow to let those who passed know they should purchase a certificate product
+
+3. On the day you intend to produce the certificates
+    * Update `Completion Status` to `Cert Issued`
+    * Update  `Certificate Issue Date` to the last day of the Voyage - `2026-07-19`
+    * Run `chingu-x/certmaker` to produce the certificates. Update the `COMPLETION_DATE` environment variable to `July 19, 2026` and set `MODE=NOEMAIL` and run it to produce certificates on your local PC so you can spot check them.
+    * When you are ready to email them set `MODE=EMAIL` and rerun it
+
 ## Installation
 
 To install this app:
-```
+
+```bash
 git clone https://github.com/chingu-x/certmaker.git
 npm i
 ```
 
-To run the app check out the information in the *_'Usage'_* section below.
+To run the app check out the information in the _'Usage'_ section below.
 
 certmaker must be defined in the Discord server and granted administrator
-permissions. 
-## Usage
+permissions.
+
+## How to run
 
 certmaker is a command line application (CLI). The basic command to run it is:
-```
+
+```bash
 npm run start
 ```
 
@@ -59,10 +103,10 @@ matching file under `config/` - see [Configuration](#configuration) below.
 
 ### `.env`
 
-| `.env` Parm    | Description                              |
-|----------------|------------------------------------------|
+| `.env` Parm | Description |
+| ---------------- | ------------------------------------------ |
 | AIRTABLE_API_KEY | Airtable API key needed to access Airtable |
-| AIRTABLE_BASE  | Airtable base id containing the table(s) to be accessed |
+| AIRTABLE_BASE | Airtable base id containing the table(s) to be accessed |
 | MAILJET_API_KEY | MailJet API key |
 | MAILJET_SECRET_KEY | MailJet API Secret key |
 | TYPE | The type of certificate to create - `VOYAGE`, `VOYAGEXP` or `DISTINCTION` |
@@ -75,7 +119,7 @@ matching file under `config/` - see [Configuration](#configuration) below.
 Each `TYPE` reads its certificate content settings from a matching file under `config/`:
 
 | `TYPE` | Config file |
-|----------------|------------------------------------------|
+| ---------------- | ------------------------------------------ |
 | VOYAGE | [`config/VoyageConfig.js`](./config/VoyageConfig.js) |
 | VOYAGEXP | [`config/VoyageXPConfig.js`](./config/VoyageXPConfig.js) |
 | DISTINCTION | [`config/DistinctionConfig.js`](./config/DistinctionConfig.js) |
@@ -83,7 +127,7 @@ Each `TYPE` reads its certificate content settings from a matching file under `c
 Each config file exports the following fields:
 
 | Field | Description |
-|----------------|------------------------------------------|
+| ---------------- | ------------------------------------------ |
 | VOYAGE | The Voyage name (e.g. `'V99'`) certificates are to be produced for. |
 | TEAMS | Teams certs are to be produced for. Use `'ALL'` for all teams or a comma separated list of team numbers. Not used for `DISTINCTION`. |
 | ROLES | Comma separated list of Voyager roles to include on certificates (e.g. `'Product Owner,Scrum Master,UI/UX,Developer,Voyage Guide'`). |
@@ -102,7 +146,8 @@ instead of Airtable.
 #### Example #1 - Create Voyage Completion Certificates for all teams
 
 Update `.env`:
-```
+
+```bash
 AIRTABLE_API_KEY=key4nOhM9fKbs94Ba
 AIRTABLE_BASE=appgoC1weqBUY5EX
 MAILJET_API_KEY=01e7ab43fsg6fsgh45fs3478ffh5809
@@ -112,6 +157,7 @@ MODE=NOEMAIL
 ```
 
 Update `config/VoyageConfig.js`:
+
 ```js
 const config = {
   TYPE: VOYAGE,
@@ -127,7 +173,8 @@ const config = {
 ```
 
 Next, run certmaker:
-```
+
+```bash
 npm run start
 ```
 
