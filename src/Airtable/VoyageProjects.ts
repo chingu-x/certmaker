@@ -41,7 +41,6 @@ const getSuccessfulVoyagers = async (voyageName: string, roles: string, teams: s
       // Create a filter to extract team members from specific teams who 
       // successfully completed
       const teamNumbers = (teams ?? '').split(',')
-      console.log(`getSuccessfulVoyager - teamNumbers: ${ teamNumbers }`)
       const teamConditions = teamNumbers.map(teamNumber => {
         return '{'.concat('What is your Team number?}',' = ',teamNumber)
       })
