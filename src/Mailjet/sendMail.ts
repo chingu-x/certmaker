@@ -40,6 +40,7 @@ const sendMail = (toEmail: string, toName: string, attachmentFileName: string, a
   .catch(async (err) => {
     console.log(`...error emailing certificate to ${ toEmail }`)
     console.log('...err: ', err)
+    throw new Error(err)
   })
 }
 
