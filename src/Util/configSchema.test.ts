@@ -9,7 +9,8 @@ const validConfig = {
   CERTIFICATE_PATH: '/tmp/certs/',
   NAME_FONT_PATH: './assets/fonts/SnellRoundhand.ttf',
   TEMPLATE_PATH: '../../assets/template.pdf',
-  VOYAGE_CERT_TEMPLATE_ID: 12345
+  VOYAGE_CERT_TEMPLATE_ID: 12345,
+  EMAIL_ADDRESSES: []
 }
 
 describe('certConfigSchema', () => {
@@ -51,6 +52,18 @@ describe('certConfigSchema', () => {
     expect(() => certConfigSchema.parse({ ...validConfig, TEMPLATE_PATH: '../../assets/template.docx' })).toThrow()
   })
 
+  it('accepts an empty EMAIL_ADDRESSES array', () => {
+    expect(() => certConfigSchema.parse({ ...validConfig, EMAIL_ADDRESSES: [] })).not.toThrow()
+  })
+
+  it('rejects EMAIL_ADDRESSES with an invalid email', () => {
+    expect(() => certConfigSchema.parse({ ...validConfig, EMAIL_ADDRESSES: ['invalid-email'] })).toThrow()
+  })
+  
+  it('accepts EMAIL_ADDRESSES not being present in the config file at all', () => {
+    expect(() => certConfigSchema.parse({ ...validConfig, EMAIL_ADDRESSES: undefined })).not.toThrow()
+  })
+  
   it.each([0, -1, 1.5])('rejects VOYAGE_CERT_TEMPLATE_ID %s', (id) => {
     expect(() => certConfigSchema.parse({ ...validConfig, VOYAGE_CERT_TEMPLATE_ID: id })).toThrow()
   })

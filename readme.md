@@ -146,7 +146,7 @@ Each `TYPE` reads its certificate content settings from a matching file under `c
 | VOYAGEXP | [`config/VoyageXPConfig.js`](./config/VoyageXPConfig.js) |
 | DISTINCTION | [`config/DistinctionConfig.js`](./config/DistinctionConfig.js) |
 
-Each config file exports the following fields:
+A config file MUST be present for each type, even if it exports an empty object. Also, cert_of_distinction_recipients.json must also exist in the config folder, even if it contains an empty object. Each config file exports the following fields:
 
 | Field | Description |
 | ---------------- | ------------------------------------------ |

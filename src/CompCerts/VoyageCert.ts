@@ -103,7 +103,8 @@ const createPDF = async (voyager: Voyager): Promise<PDFDocument> => {
 // Retrieve the Chingus who successfully completed the Voyage and generate
 // a Completion Certificate for each one.
 const createVoyageCert = async (): Promise<void> => {
-  const successfulVoyagers = await getSuccessfulVoyagers(config.VOYAGE, config.ROLES, config.TEAMS)
+  const successfulVoyagers = await getSuccessfulVoyagers(config.VOYAGE, config.ROLES, config.TEAMS, config.EMAIL_ADDRESSES)
+  
   let base64Cert
   for (const voyager of successfulVoyagers) {
     console.log(`Processing certificate for ${ voyager.discord_name } / ${ voyager.certificate_name }...`)

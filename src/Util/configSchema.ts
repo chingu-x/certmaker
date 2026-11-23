@@ -15,5 +15,6 @@ export const certConfigSchema = z.object({
   CERTIFICATE_PATH: z.string().min(1).endsWith('/'),
   NAME_FONT_PATH: z.string().regex(/\.(ttf|otf)$/i, 'must be a .ttf or .otf font file'),
   TEMPLATE_PATH: z.string().endsWith('.pdf'),
-  VOYAGE_CERT_TEMPLATE_ID: z.number().int().positive()
+  VOYAGE_CERT_TEMPLATE_ID: z.number().int().positive(),
+  EMAIL_ADDRESSES: z.array(z.email()).optional().default([])
 })

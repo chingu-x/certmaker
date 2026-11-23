@@ -14,56 +14,78 @@ interface VoyageProjectFields extends Airtable.FieldSet {
 }
 
 // Retrieve the Voyagers who successfully completed the Voyage
-const getSuccessfulVoyagers = async (voyageName: string, roles: string, teams: string): Promise<Voyager[]> => {
+const getSuccessfulVoyagers = async (voyageName: string, roles: string, teams: string, email_addresses: string[]): Promise<Voyager[]> => {
   return new Promise<Voyager[]>(async (resolve, reject) => {
     const voyagers: Voyager[] = []
-    let filter: string
+    let filter = "AND(" +
+        "\n{What is your Voyage?} = \"" + voyageName + "\", " + 
+        "\n{Completed Voyage?} = \"Yes\", " +
+        "\n{Completion Status} = \"Cert issued\", "
+      ;
+      
 
-    // Construct a role filter to select only desired roles
-    const rolesToSelect = (roles).split(',')
-    let roleQuery = 'OR('
-    for (let role of rolesToSelect) {
-      roleQuery = roleQuery.concat(`{Role (from Voyage Signups Link)} = \"${ role }\",`)
-    }
-    roleQuery = roleQuery.slice(0,roleQuery.length-1)
-    roleQuery = roleQuery.concat(')')
-
-    if (teams === 'ALL') {
-      // Create a filter to extract all team members who successfully completed
-      // TODO: Add environment variable to specify exact roles to be included
-      filter = "AND(" + 
-        "{What is your Voyage?} = \"" + voyageName + "\", " + 
-        "{Completed Voyage?} = \"Yes\", " + 
-        "{Completion Status} = \"Cert issued\", " +
-        roleQuery +
-      ")"
-    } else {
-      // Create a filter to extract team members from specific teams who 
-      // successfully completed
-      const teamNumbers = (teams ?? '').split(',')
-      const teamConditions = teamNumbers.map(teamNumber => {
-        return '{'.concat('What is your Team number?}',' = ',teamNumber)
-      })
-
-      let orClause = ''
-      for (let i = 0; i < teamConditions.length; i++) {
-        orClause = orClause.concat(teamConditions[i],)
-        if (i < (teamConditions.length - 1)) {
-          orClause = orClause.concat(', ')
+    function getVoyagerRoleQuery(roles: string): string {
+      let roleClause = ''
+      if (roles !== 'ALL' && roles !== '') {
+      // Construct a role filter to select only desired roles
+        const rolesToSelect = (roles).split(',')
+        for (let role of rolesToSelect) {
+          roleClause = roleClause.concat(`\n{Role (from Voyage Signups Link)} = \"${ role }\",`)
         }
       }
-
-      filter = "AND(" + 
-        "{What is your Voyage?} = \"" + voyageName + "\", " + 
-        "{Completed Voyage?} = \"Yes\" , " + 
-        "OR({Role (from Voyage Signups Link)} = \"Technical Guide\", " + 
-           "{Product} != \"\" " +
-        "), " +
-        "OR(" + orClause + ") " + 
-      ")"
+      roleClause = roleClause.concat('\n{Role (from Voyage Signups Link)} = \"Technical Guide\"')
+      return '\nOR(' + roleClause + ')'
     }
 
-    console.log('getSuccessfulVoyager - filter: ', filter)
+    function getVoyagerEmailQuery(email_addresses: string[]): string {
+      let emailClause = ''
+      if (email_addresses && email_addresses.length > 0) {
+        for (let i = 0; i < email_addresses.length; i++) {
+          if (email_addresses[i] === '') {
+            continue;
+          }
+          emailClause = emailClause.concat(`{Email} = \"${ email_addresses[i] }\"`)
+          if (i < (email_addresses.length - 1)) {
+            emailClause = emailClause.concat(', ')
+          }
+        }
+      }
+      if (emailClause === '') {
+        return ''
+      }
+      return '\nOR(' + emailClause + '),'
+    }
+
+    function getVoyagerTeamQuery(teams: string): string {
+      let teamClause = ''
+      if (teams !== 'ALL' && teams !== '') {
+        const teamNumbers = teams.split(',')
+        for (let i = 0; i < teamNumbers.length; i++) {
+          teamClause = teamClause.concat(`{What is your Team number?} = ${ teamNumbers[i] }`)
+          if (i < (teamNumbers.length - 1)) {
+            teamClause = teamClause.concat(', ')
+          }
+        }
+      }
+      return '\nOR(' + teamClause + ')'       
+    }
+
+    if (email_addresses && email_addresses.length > 0) {
+      const emailQuery = getVoyagerEmailQuery(email_addresses)
+      filter +=emailQuery
+    }
+    
+    if (teams === 'ALL') {
+      const roleQuery = getVoyagerRoleQuery(roles)
+      filter += roleQuery
+    } else {
+      const teamQuery = getVoyagerTeamQuery(teams)
+      filter += teamQuery
+    }
+
+    filter += ",\n{Product} != \"\"\n)"
+    
+    console.log('Filter: ', filter)
 
     const base = new Airtable({ apiKey: process.env.AIRTABLE_API_KEY }).base(process.env.AIRTABLE_BASE)
     
